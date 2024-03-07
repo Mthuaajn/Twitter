@@ -52,7 +52,16 @@ export const registerValidator = validate(
       notEmpty: true,
       isEmail: true,
       trim: true,
-      errorMessage: 'Email is not valid'
+      errorMessage: 'Email is not valid',
+      custom: {
+        options: async (value) => {
+          const result = await userService.checkEmailExist(value);
+          if (result) {
+            throw new Error('Email is already exist');
+          }
+          return true;
+        }
+      }
     },
     password: {
       notEmpty: true,

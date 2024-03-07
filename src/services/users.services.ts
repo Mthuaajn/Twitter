@@ -6,6 +6,10 @@ class UserService {
     const result = await databaseService.users.insertOne(new User(payload));
     return result;
   }
+  async checkEmailExist(email: string) {
+    const result = await databaseService.users.findOne({ email });
+    return Boolean(result);
+  }
 }
 
 const userService = new UserService();
