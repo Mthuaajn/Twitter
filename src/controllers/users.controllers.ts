@@ -1,9 +1,11 @@
 import { validate } from './../utils/validation';
 import { Request, Response } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 import User from '~/models/schemas/User.schema';
 import databaseService from '~/services/db.services';
 import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
+import { RegisterReqBody } from '~/models/requests/User.request';
 
 export const loginController = (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -14,13 +16,14 @@ export const loginController = (req: Request, res: Response) => {
   }
 };
 
-export const registerController = async (req: Request, res: Response) => {
+export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
   const { email, password } = req.body;
+ 
   if (!email && !password) {
     res.status(401).json({ message: 'Email and password is required' });
   } else {
     try {
-      const result = await userService.register({ email, password });
+      const result = await userService.register(req.body);
       return res.status(200).json({
         message: 'Register successfully',
         data: result

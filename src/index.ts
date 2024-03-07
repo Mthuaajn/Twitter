@@ -8,5 +8,5 @@ DatabaseService.run().catch(console.dir);
 app.use(express.json());
 app.use('/api/v1/users', userRouter);
 app.listen(port, () => {
-  console.log('start sever');
+  console.log(`app running on port ${port}`);
 });
