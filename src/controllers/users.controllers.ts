@@ -18,7 +18,6 @@ export const loginController = (req: Request, res: Response) => {
 
 export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
   const { email, password } = req.body;
- 
   if (!email && !password) {
     res.status(401).json({ message: 'Email and password is required' });
   } else {
