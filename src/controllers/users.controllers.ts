@@ -7,6 +7,7 @@ import databaseService from '~/services/db.services';
 import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
 import { RegisterReqBody } from '~/models/requests/User.request';
+import { ErrorWithStatus } from '~/utils/Error';
 
 export const loginController = (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -109,7 +110,10 @@ export const registerValidator = validate(
         // function check confirm password match password to request
         options: (value, { req }) => {
           if (value !== req.body.password) {
-            throw new Error('Password confirmation does not match password');
+            throw new ErrorWithStatus({
+              message: 'Password confirmation does not match password',
+              status: 422
+            });
           }
           return true;
         }
