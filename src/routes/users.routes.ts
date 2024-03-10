@@ -1,6 +1,7 @@
+import { registerValidator } from './../middlewares/users.middlewares';
 import { validate } from './../utils/validation';
 import { Router } from 'express';
-import { loginController, registerController, registerValidator } from '~/controllers/users.controllers';
+import { loginController, registerController } from '~/controllers/users.controllers';
 
 const userRouter = Router();
 
