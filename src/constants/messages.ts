@@ -1,6 +1,6 @@
 const USERS_MESSAGE = {
   VALIDATION_ERROR: 'Validation error',
-  USER_NOT_FOUND: 'User not found',
+  EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect',
   NAME_REQUIRED: 'Name is required',
   USER_EXIST: 'User is already exist',
   LOGIN_FAILED: 'Login failed',

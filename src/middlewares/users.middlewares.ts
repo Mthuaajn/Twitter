@@ -3,7 +3,35 @@ import { checkSchema } from 'express-validator';
 import userService from '~/services/users.services';
 import { ErrorWithStatus } from '~/utils/Error';
 import { validate } from '~/utils/validation';
+import databaseService from '~/services/db.services';
+import { hashPassword } from '~/utils/crypto';
 
+export const loginValidator = validate(
+  checkSchema({
+    email: {
+      notEmpty: {
+        errorMessage: USERS_MESSAGE.EMAIL_REQUIRED
+      },
+      isEmail: {
+        errorMessage: USERS_MESSAGE.EMAIL_NOT_VALID
+      },
+      trim: true,
+      custom: {
+        options: async (value, { req }) => {
+          const user = await databaseService.users.findOne({
+            email: value,
+            password: hashPassword(req.body.password)
+          });
+          if (!user) {
+            throw new Error(USERS_MESSAGE.EMAIL_OR_PASSWORD_IS_INCORRECT);
+          }
+          req.user = user;
+          return true;
+        }
+      }
+    }
+  })
+);
 export const registerValidator = validate(
   checkSchema({
     name: {

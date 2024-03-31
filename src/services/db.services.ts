@@ -1,6 +1,7 @@
 import { MongoClient, ServerApiVersion, Db, Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import User from '~/models/schemas/User.schema';
+import RefreshToken from '~/models/schemas/RefreshToken.schema';
 dotenv.config();
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
@@ -28,6 +29,9 @@ class DatabaseService {
   }
   public get users(): Collection<User> {
     return this.db.collection(process.env.DB_USER_COLLECTION as string);
+  }
+  public get refreshToken(): Collection<RefreshToken> {
+    return this.db.collection(process.env.DB_REFRESH_TOKEN_COLLECTION as string);
   }
 }
 

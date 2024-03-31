@@ -1,11 +1,11 @@
-import { registerValidator } from './../middlewares/users.middlewares';
+import { loginValidator, registerValidator } from './../middlewares/users.middlewares';
 import { validate } from './../utils/validation';
 import { Router } from 'express';
 import { loginController, registerController } from '~/controllers/users.controllers';
 
 const userRouter = Router();
 
-userRouter.post('/login', loginController);
+userRouter.post('/login', loginValidator, loginController);
 // tạo checkSchema để kiểm tra dữ liệu đầu vào
 userRouter.post('/register', registerValidator, registerController);
 

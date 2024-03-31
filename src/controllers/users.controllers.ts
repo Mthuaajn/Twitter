@@ -8,15 +8,17 @@ import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
 import { RegisterReqBody } from '~/models/requests/User.request';
 import { ErrorWithStatus } from '~/utils/Error';
+import USERS_MESSAGE from '~/constants/messages';
 
-export const loginController = (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  if (email === 'nmt6465@gmail.com' && password === '123456') {
-    res.status(200).json({ message: 'Login successfully' });
-  } else {
-    res.status(401).json({ message: 'Login failed!' });
-  }
-};
+export const loginController = wrapRequestHandler(async (req: Request, res: Response) => {
+  const { user }: any = req;
+  const { _id } = user;
+  const result = await userService.login(_id.toString());
+  return res.status(200).json({
+    message: USERS_MESSAGE.LOGIN_SUCCESS,
+    data: result
+  });
+});
 
 export const registerController = wrapRequestHandler(
   async (
@@ -30,10 +32,9 @@ export const registerController = wrapRequestHandler(
     } else {
       const result = await userService.register(req.body);
       return res.status(200).json({
-        message: 'Register successfully',
+        message: USERS_MESSAGE.REGISTER_SUCCESS,
         data: result
       });
     }
   }
 );
-
