@@ -19,6 +19,8 @@ const USERS_MESSAGE = {
   EMAIL_REQUIRED: 'Email is required',
   CONFIRM_PASSWORD_REQUIRED: 'Confirm password is required',
   USER_NOT_AUTHORIZED: 'User is not',
-  DAY_OF_BIRTH: 'IOS 8601 date format (YYYY-MM-DD)'
+  DAY_OF_BIRTH: 'IOS 8601 date format (YYYY-MM-DD)',
+  ACCESS_TOKEN_INVALID: 'Access token is invalid',
+  ACCESS_TOKEN_REQUIRED: 'Access token is required'
 } as const;
 export default USERS_MESSAGE;
