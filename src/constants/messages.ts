@@ -21,6 +21,11 @@ const USERS_MESSAGE = {
   USER_NOT_AUTHORIZED: 'User is not',
   DAY_OF_BIRTH: 'IOS 8601 date format (YYYY-MM-DD)',
   ACCESS_TOKEN_INVALID: 'Access token is invalid',
-  ACCESS_TOKEN_REQUIRED: 'Access token is required'
+  ACCESS_TOKEN_REQUIRED: 'Access token is required',
+  REFRESH_TOKEN_REQUIRED: 'Refresh token is required',
+  REFRESH_TOKEN_STRING: 'Refresh token must be a string',
+  REFRESH_TOKEN_INVALID: 'Refresh token is invalid',
+  REFRESH_TOKEN_NOT_EXIST: 'Refresh token does not exist',
+  LOGOUT_SUCCESS: 'Logout successfully'
 } as const;
 export default USERS_MESSAGE;

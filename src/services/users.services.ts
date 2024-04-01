@@ -7,6 +7,7 @@ import { signToken } from '~/utils/jwt';
 import { hashPassword } from '~/utils/crypto';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import dotenv from 'dotenv';
+import USERS_MESSAGE from '~/constants/messages';
 dotenv.config();
 class UserService {
   private signAccessToken(user_id: string) {
@@ -62,6 +63,10 @@ class UserService {
       accessToken,
       refreshToken
     };
+  }
+  async logout(refreshToken: string) {
+    await databaseService.refreshToken.deleteOne({ token: refreshToken });
+    return { message: USERS_MESSAGE.LOGOUT_SUCCESS };
   }
 }
 

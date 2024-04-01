@@ -6,7 +6,7 @@ import User from '~/models/schemas/User.schema';
 import databaseService from '~/services/db.services';
 import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
-import { RegisterReqBody } from '~/models/requests/User.request';
+import { LogoutReqBody, RegisterReqBody } from '~/models/requests/User.request';
 import { ErrorWithStatus } from '~/utils/Error';
 import USERS_MESSAGE from '~/constants/messages';
 
@@ -36,5 +36,13 @@ export const registerController = wrapRequestHandler(
         data: result
       });
     }
+  }
+);
+
+export const logoutController = wrapRequestHandler(
+  async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
+    const { refreshToken } = req.body;
+    const result = await userService.logout(refreshToken);
+    res.status(200).json(result);
   }
 );

@@ -1,11 +1,16 @@
 import {
   accessTokenValidator,
   loginValidator,
+  refreshTokenValidator,
   registerValidator
 } from './../middlewares/users.middlewares';
 import { validate } from './../utils/validation';
 import { Router } from 'express';
-import { loginController, registerController } from '~/controllers/users.controllers';
+import {
+  loginController,
+  logoutController,
+  registerController
+} from '~/controllers/users.controllers';
 
 const userRouter = Router();
 /**
@@ -33,8 +38,5 @@ userRouter.post('/register', registerValidator, registerController);
  * Headers: {Authorization: Bearer <accessToken>}
  * body:{refreshToken:string}
  */
-userRouter.post('/logout', accessTokenValidator, (req, res) => {
-  res.status(200).json({ message: 'logout successfully' });
-});
-
+userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, logoutController);
 export default userRouter;

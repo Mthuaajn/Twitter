@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import USERS_MESSAGE from '~/constants/messages';
 import { checkSchema } from 'express-validator';
 import userService from '~/services/users.services';
@@ -6,6 +7,7 @@ import { validate } from '~/utils/validation';
 import databaseService from '~/services/db.services';
 import { hashPassword } from '~/utils/crypto';
 import { verifyToken } from '~/utils/jwt';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 export const loginValidator = validate(
   checkSchema(
@@ -164,8 +166,17 @@ export const accessTokenValidator = validate(
                 status: 401
               });
             }
-            const decoded_authorization = await verifyToken({ token: access_token });
-            req.decoded_authorization = decoded_authorization;
+            try {
+              const decoded_authorization = await verifyToken({ token: access_token });
+              (req as Request).decode_authorization = decoded_authorization;
+            } catch (err) {
+              if (err instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGE.ACCESS_TOKEN_INVALID,
+                  status: 401
+                });
+              }
+            }
             return true;
           }
         }
@@ -173,4 +184,43 @@ export const accessTokenValidator = validate(
     },
     ['headers']
   )
+);
+
+export const refreshTokenValidator = validate(
+  checkSchema({
+    refreshToken: {
+      notEmpty: {
+        errorMessage: USERS_MESSAGE.REFRESH_TOKEN_REQUIRED
+      },
+      isString: {
+        errorMessage: USERS_MESSAGE.REFRESH_TOKEN_STRING
+      },
+      custom: {
+        options: async (value, { req }) => {
+          try {
+            const [decoded_refresh_token, refreshToken] = await Promise.all([
+              await verifyToken({ token: value }),
+              await databaseService.refreshToken.findOne({ token: value })
+            ]);
+            if (refreshToken === null) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGE.REFRESH_TOKEN_NOT_EXIST,
+                status: 401
+              });
+            }
+            (req as Request).decode_refresh_token = decoded_refresh_token;
+          } catch (err) {
+            if (err instanceof JsonWebTokenError) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGE.REFRESH_TOKEN_INVALID,
+                status: 401
+              });
+            } else {
+              throw err;
+            }
+          }
+        }
+      }
+    }
+  })
 );
