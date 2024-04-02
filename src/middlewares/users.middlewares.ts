@@ -8,6 +8,7 @@ import databaseService from '~/services/db.services';
 import { hashPassword } from '~/utils/crypto';
 import { verifyToken } from '~/utils/jwt';
 import { JsonWebTokenError } from 'jsonwebtoken';
+import HTTP_STATUS from '~/constants/httpStatus';
 
 export const loginValidator = validate(
   checkSchema(
@@ -154,12 +155,15 @@ export const accessTokenValidator = validate(
   checkSchema(
     {
       Authorization: {
-        notEmpty: {
-          errorMessage: USERS_MESSAGE.ACCESS_TOKEN_REQUIRED
-        },
         custom: {
           options: async (value, { req }) => {
-            const access_token = value.split(' ')[1];
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGE.ACCESS_TOKEN_REQUIRED,
+                status: HTTP_STATUS.UNAUTHORIZED
+              });
+            }
+            const access_token = (value || '').split(' ')[1];
             if (!access_token) {
               throw new ErrorWithStatus({
                 message: USERS_MESSAGE.ACCESS_TOKEN_REQUIRED,
@@ -167,7 +171,10 @@ export const accessTokenValidator = validate(
               });
             }
             try {
-              const decoded_authorization = await verifyToken({ token: access_token });
+              const decoded_authorization = await verifyToken({
+                token: access_token,
+                secretOrPublicKey: process.env.JWT_ACCESS_TOKEN_SECRET as string
+              });
               (req as Request).decode_authorization = decoded_authorization;
             } catch (err) {
               if (err instanceof JsonWebTokenError) {
@@ -189,17 +196,24 @@ export const accessTokenValidator = validate(
 export const refreshTokenValidator = validate(
   checkSchema({
     refreshToken: {
-      notEmpty: {
-        errorMessage: USERS_MESSAGE.REFRESH_TOKEN_REQUIRED
-      },
       isString: {
         errorMessage: USERS_MESSAGE.REFRESH_TOKEN_STRING
       },
+      trim: true,
       custom: {
         options: async (value, { req }) => {
+          if (!value) {
+            throw new ErrorWithStatus({
+              message: USERS_MESSAGE.REFRESH_TOKEN_REQUIRED,
+              status: HTTP_STATUS.UNAUTHORIZED
+            });
+          }
           try {
             const [decoded_refresh_token, refreshToken] = await Promise.all([
-              await verifyToken({ token: value }),
+              await verifyToken({
+                token: value,
+                secretOrPublicKey: process.env.JWT_REFRESH_TOKEN_SECRET as string
+              }),
               await databaseService.refreshToken.findOne({ token: value })
             ]);
             if (refreshToken === null) {
@@ -218,6 +232,40 @@ export const refreshTokenValidator = validate(
             } else {
               throw err;
             }
+          }
+        }
+      }
+    }
+  })
+);
+
+export const emailVerifyTokenValidator = validate(
+  checkSchema({
+    email_verify_token: {
+      isString: {
+        errorMessage: USERS_MESSAGE.REFRESH_TOKEN_STRING
+      },
+      trim: true,
+      custom: {
+        options: async (value, { req }) => {
+          if (!value) {
+            throw new ErrorWithStatus({
+              message: USERS_MESSAGE.EMAIL_VERIFY_TOKEN_REQUIRED,
+              status: HTTP_STATUS.UNAUTHORIZED
+            });
+          }
+          try {
+            const decode_email_verify_token = await verifyToken({
+              token: value,
+              secretOrPublicKey: process.env.JWT_EMAIL_VERIFY_TOKEN_SECRET as string
+            });
+
+            (req as Request).decode_email_verify_token = decode_email_verify_token;
+          } catch (err) {
+            throw new ErrorWithStatus({
+              message: USERS_MESSAGE.EMAIL_VERIFY_FAILED,
+              status: HTTP_STATUS.UNAUTHORIZED
+            });
           }
         }
       }

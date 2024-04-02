@@ -18,7 +18,8 @@ const USERS_MESSAGE = {
   PASSWORD_MUST_BE_STRING: 'Password',
   EMAIL_REQUIRED: 'Email is required',
   CONFIRM_PASSWORD_REQUIRED: 'Confirm password is required',
-  USER_NOT_AUTHORIZED: 'User is not',
+  USER_NOT_AUTHORIZED: 'User is not authorized',
+  USER_NOT_FOUND: 'User is not found',
   DAY_OF_BIRTH: 'IOS 8601 date format (YYYY-MM-DD)',
   ACCESS_TOKEN_INVALID: 'Access token is invalid',
   ACCESS_TOKEN_REQUIRED: 'Access token is required',
@@ -26,6 +27,12 @@ const USERS_MESSAGE = {
   REFRESH_TOKEN_STRING: 'Refresh token must be a string',
   REFRESH_TOKEN_INVALID: 'Refresh token is invalid',
   REFRESH_TOKEN_NOT_EXIST: 'Refresh token does not exist',
-  LOGOUT_SUCCESS: 'Logout successfully'
+  LOGOUT_SUCCESS: 'Logout successfully',
+  EMAIL_VERIFY_SUCCESS: 'send email verify success',
+  EMAIL_VERIFY_FAILED: 'email verify failed',
+  EMAIL_VERIFY_TOKEN_REQUIRED: 'Email verify token is required',
+  EMAIL_ALREADY_VERIFY_BEFORE: 'Email is already verify before',
+  EMAIL_SEND_SUCCESS: 'Email send success',
+  EMAIL_SEND_FAILED: 'Email send failed'
 } as const;
 export default USERS_MESSAGE;

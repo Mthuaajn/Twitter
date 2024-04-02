@@ -10,6 +10,10 @@ export interface RegisterReqBody {
   date_of_birth: string;
 }
 
+export interface LoginReqBody {
+  email: string;
+  password: string;
+}
 export interface LogoutReqBody {
   refreshToken: string;
 }

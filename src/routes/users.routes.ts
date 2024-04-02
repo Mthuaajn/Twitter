@@ -1,5 +1,6 @@
 import {
   accessTokenValidator,
+  emailVerifyTokenValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator
@@ -7,6 +8,7 @@ import {
 import { validate } from './../utils/validation';
 import { Router } from 'express';
 import {
+  emailVerifyValidator,
   loginController,
   logoutController,
   registerController
@@ -39,4 +41,17 @@ userRouter.post('/register', registerValidator, registerController);
  * body:{refreshToken:string}
  */
 userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, logoutController);
+
+userRouter.post('/refresh-token', (req, res) => {
+  res.send('refresh token');
+});
+
+/**
+ * description: email Verify  user
+ *  path: /verify-email
+ * method: POST
+ * body:{emailVerify:string}
+ */
+userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyValidator);
+
 export default userRouter;
