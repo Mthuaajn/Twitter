@@ -7,10 +7,13 @@ import databaseService from '~/services/db.services';
 import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
 import {
+  emailVerifyReqBody,
+  ForgotPasswordReqBody,
   LoginReqBody,
   LogoutReqBody,
   RegisterReqBody,
-  TokenPayload
+  TokenPayload,
+  VerifyForgotPasswordReqBody
 } from '~/models/requests/User.request';
 import { ErrorWithStatus } from '~/utils/Error';
 import USERS_MESSAGE from '~/constants/messages';
@@ -58,8 +61,12 @@ export const logoutController = wrapRequestHandler(
   }
 );
 
-export const emailVerifyValidator = wrapRequestHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+export const emailVerifyController = wrapRequestHandler(
+  async (
+    req: Request<ParamsDictionary, any, emailVerifyReqBody>,
+    res: Response,
+    next: NextFunction
+  ) => {
     const { user_id } = req.decode_email_verify_token as TokenPayload;
     const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) });
     // nếu không tìm thấy user thì báo lỗi và trả về cho người dùng
@@ -99,5 +106,21 @@ export const resendEmailVerifyController = wrapRequestHandler(
     }
     const result = await userService.resend_email_verify(user_id.toString());
     res.status(200).json(result);
+  }
+);
+
+export const forgotPasswordController = wrapRequestHandler(
+  async (req: Request<ParamsDictionary, any, ForgotPasswordReqBody>, res: Response) => {
+    const { _id } = req.user as User;
+    const result = await userService.forgotPassword((_id as ObjectId)?.toString());
+    res.status(200).json(result);
+  }
+);
+
+export const verifyForgotPasswordController = wrapRequestHandler(
+  async (req: Request<ParamsDictionary, any, VerifyForgotPasswordReqBody>, res: Response) => {
+    res.status(HTTP_STATUS.OK).json({
+      message: USERS_MESSAGE.FORGOT_PASSWORD_TOKEN_SUCCESS
+    });
   }
 );

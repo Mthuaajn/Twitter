@@ -1,18 +1,22 @@
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
+  forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  verifyForgotPasswordTokenValidator
 } from './../middlewares/users.middlewares';
 import { validate } from './../utils/validation';
 import { Router } from 'express';
 import {
-  emailVerifyValidator,
+  emailVerifyController,
+  forgotPasswordController,
   loginController,
   logoutController,
   registerController,
-  resendEmailVerifyController
+  resendEmailVerifyController,
+  verifyForgotPasswordController
 } from '~/controllers/users.controllers';
 
 const userRouter = Router();
@@ -53,7 +57,7 @@ userRouter.post('/refresh-token', (req, res) => {
  * method: POST
  * body:{emailVerify:string}
  */
-userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyValidator);
+userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyController);
 
 /**
  * description: email Verify  user
@@ -62,4 +66,23 @@ userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyValidator
  * body:
  */
 userRouter.post('/resend-email-verify', accessTokenValidator, resendEmailVerifyController);
+
+/**
+ * description: email Verify  user
+ *  path: /forgot-password
+ * method: POST
+ * body: { email : string}
+ */
+userRouter.post('/forgot-password', forgotPasswordValidator, forgotPasswordController);
+/**
+ * description: email Verify  user
+ *  path: /verify-forgot-password
+ * method: POST
+ * body: { forgot_password_token : string}
+ */
+userRouter.post(
+  '/verify-forgot-password',
+  verifyForgotPasswordTokenValidator,
+  verifyForgotPasswordController
+);
 export default userRouter;

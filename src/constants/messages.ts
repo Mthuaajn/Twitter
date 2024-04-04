@@ -34,6 +34,10 @@ const USERS_MESSAGE = {
   EMAIL_ALREADY_VERIFY_BEFORE: 'Email is already verify before',
   EMAIL_SEND_SUCCESS: 'Email send success',
   EMAIL_SEND_FAILED: 'Email send failed',
-  EMAIL_RESEND_SUCCESS: 'Email resend success'
+  EMAIL_RESEND_SUCCESS: 'Email resend success',
+  FORGOT_PASSWORD_SUCCESS: 'Forgot password success',
+  FORGOT_PASSWORD_TOKEN_REQUIRED: 'Forgot password token is required',
+  FORGOT_PASSWORD_TOKEN_INVALID: 'Forgot password token is invalid',
+  FORGOT_PASSWORD_TOKEN_SUCCESS: 'Forgot password token success'
 } as const;
 export default USERS_MESSAGE;
