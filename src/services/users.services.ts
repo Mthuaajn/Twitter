@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { tokenType } from './../constants/enums';
+import { tokenType, UserVerifyStatus } from './../constants/enums';
 import User from '~/models/schemas/User.schema';
 import databaseService from './db.services';
 import { RegisterReqBody } from '~/models/requests/User.request';
@@ -87,12 +87,17 @@ class UserService {
   async verify_email(user_id: string) {
     const [token] = await Promise.all([
       this.createRefreshTokenAndAccessToken(user_id),
+      // giá trị đang trong giai đoạn cập nhật
       databaseService.users.updateOne(
         { _id: new ObjectId(user_id) },
         {
           $set: {
             email_verify_token: '',
-            updated_at: new Date()
+            verify: UserVerifyStatus.Verified
+            // updated_at: new Date()
+          },
+          $currentDate: {
+            update_at: true
           }
         }
       )
@@ -102,6 +107,24 @@ class UserService {
       access_token,
       refresh_token
     };
+  }
+  async resend_email_verify(user_id: string) {
+    const email_verify_token = await this.signEmailVerifyToken(user_id);
+    console.log('email_verify_token', email_verify_token);
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          email_verify_token
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    );
+    return { message: USERS_MESSAGE.EMAIL_RESEND_SUCCESS };
   }
 }
 

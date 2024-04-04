@@ -17,6 +17,7 @@ import USERS_MESSAGE from '~/constants/messages';
 import { JwtPayload } from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import HTTP_STATUS from '~/constants/httpStatus';
+import { UserVerifyStatus } from '~/constants/enums';
 
 export const loginController = wrapRequestHandler(
   async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
@@ -79,5 +80,24 @@ export const emailVerifyValidator = wrapRequestHandler(
       message: USERS_MESSAGE.EMAIL_SEND_SUCCESS,
       result
     });
+  }
+);
+
+export const resendEmailVerifyController = wrapRequestHandler(
+  async (req: Request, res: Response) => {
+    const { user_id } = req.decode_authorization as TokenPayload;
+    const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) });
+    if (!user) {
+      res.status(HTTP_STATUS.NOT_FOUND).json({
+        message: USERS_MESSAGE.USER_NOT_FOUND
+      });
+    }
+    if (user?.verify === UserVerifyStatus.Verified) {
+      res.status(HTTP_STATUS.OK).json({
+        message: USERS_MESSAGE.EMAIL_ALREADY_VERIFY_BEFORE
+      });
+    }
+    const result = await userService.resend_email_verify(user_id.toString());
+    res.status(200).json(result);
   }
 );

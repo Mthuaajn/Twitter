@@ -33,6 +33,7 @@ const USERS_MESSAGE = {
   EMAIL_VERIFY_TOKEN_REQUIRED: 'Email verify token is required',
   EMAIL_ALREADY_VERIFY_BEFORE: 'Email is already verify before',
   EMAIL_SEND_SUCCESS: 'Email send success',
-  EMAIL_SEND_FAILED: 'Email send failed'
+  EMAIL_SEND_FAILED: 'Email send failed',
+  EMAIL_RESEND_SUCCESS: 'Email resend success'
 } as const;
 export default USERS_MESSAGE;

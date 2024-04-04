@@ -11,7 +11,8 @@ import {
   emailVerifyValidator,
   loginController,
   logoutController,
-  registerController
+  registerController,
+  resendEmailVerifyController
 } from '~/controllers/users.controllers';
 
 const userRouter = Router();
@@ -54,4 +55,11 @@ userRouter.post('/refresh-token', (req, res) => {
  */
 userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyValidator);
 
+/**
+ * description: email Verify  user
+ *  path: /verify-email
+ * method: POST
+ * body:
+ */
+userRouter.post('/resend-email-verify', accessTokenValidator, resendEmailVerifyController);
 export default userRouter;
