@@ -38,6 +38,7 @@ const USERS_MESSAGE = {
   FORGOT_PASSWORD_SUCCESS: 'Forgot password success',
   FORGOT_PASSWORD_TOKEN_REQUIRED: 'Forgot password token is required',
   FORGOT_PASSWORD_TOKEN_INVALID: 'Forgot password token is invalid',
-  FORGOT_PASSWORD_TOKEN_SUCCESS: 'Forgot password token success'
+  FORGOT_PASSWORD_TOKEN_SUCCESS: 'Forgot password token success',
+  RESET_PASSWORD_SUCCESS: 'Reset password success'
 } as const;
 export default USERS_MESSAGE;
