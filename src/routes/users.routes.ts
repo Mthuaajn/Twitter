@@ -1,3 +1,4 @@
+import { wrapRequestHandler } from '~/utils/handlers';
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
@@ -13,6 +14,7 @@ import { Router } from 'express';
 import {
   emailVerifyController,
   forgotPasswordController,
+  getMeController,
   loginController,
   logoutController,
   registerController,
@@ -29,7 +31,7 @@ const userRouter = Router();
  * body:{ email:string, password:string}
  *
  */
-userRouter.post('/login', loginValidator, loginController);
+userRouter.post('/login', loginValidator, wrapRequestHandler(loginController));
 
 /**
  * description: Register a new user
@@ -38,7 +40,7 @@ userRouter.post('/login', loginValidator, loginController);
  * body:{name:string, email:string, password:string, password_confirmation:string}
  *
  */
-userRouter.post('/register', registerValidator, registerController);
+userRouter.post('/register', registerValidator, wrapRequestHandler(registerController));
 
 /**
  * description: logout a user
@@ -47,7 +49,12 @@ userRouter.post('/register', registerValidator, registerController);
  * Headers: {Authorization: Bearer <accessToken>}
  * body:{refreshToken:string}
  */
-userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, logoutController);
+userRouter.post(
+  '/logout',
+  accessTokenValidator,
+  refreshTokenValidator,
+  wrapRequestHandler(logoutController)
+);
 
 userRouter.post('/refresh-token', (req, res) => {
   res.send('refresh token');
@@ -59,7 +66,11 @@ userRouter.post('/refresh-token', (req, res) => {
  * method: POST
  * body:{emailVerify:string}
  */
-userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyController);
+userRouter.post(
+  '/verify-email',
+  emailVerifyTokenValidator,
+  wrapRequestHandler(emailVerifyController)
+);
 
 /**
  * description: email Verify  user
@@ -67,7 +78,11 @@ userRouter.post('/verify-email', emailVerifyTokenValidator, emailVerifyControlle
  * method: POST
  * body:
  */
-userRouter.post('/resend-email-verify', accessTokenValidator, resendEmailVerifyController);
+userRouter.post(
+  '/resend-email-verify',
+  accessTokenValidator,
+  wrapRequestHandler(resendEmailVerifyController)
+);
 
 /**
  * description: email Verify  user
@@ -75,7 +90,11 @@ userRouter.post('/resend-email-verify', accessTokenValidator, resendEmailVerifyC
  * method: POST
  * body: { email : string}
  */
-userRouter.post('/forgot-password', forgotPasswordValidator, forgotPasswordController);
+userRouter.post(
+  '/forgot-password',
+  forgotPasswordValidator,
+  wrapRequestHandler(forgotPasswordController)
+);
 /**
  * description: verify forgot password token
  *  path: /verify-forgot-password
@@ -85,7 +104,7 @@ userRouter.post('/forgot-password', forgotPasswordValidator, forgotPasswordContr
 userRouter.post(
   '/verify-forgot-password',
   verifyForgotPasswordTokenValidator,
-  verifyForgotPasswordController
+  wrapRequestHandler(verifyForgotPasswordController)
 );
 
 /**
@@ -96,5 +115,17 @@ userRouter.post(
  * password :string,
  * confirm_password : string}
  */
-userRouter.post('/reset-password', resetPasswordValidator, resetPasswordController);
+userRouter.post(
+  '/reset-password',
+  resetPasswordValidator,
+  wrapRequestHandler(resetPasswordController)
+);
+
+/**
+ * description:get me profile
+ *  path: /get-me
+ * method: get
+ * body:
+ */
+userRouter.get('/get-me', accessTokenValidator, wrapRequestHandler(getMeController));
 export default userRouter;
