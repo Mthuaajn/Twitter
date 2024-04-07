@@ -3,16 +3,22 @@ import dotenv from 'dotenv';
 import User from '~/models/schemas/User.schema';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 dotenv.config();
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@twitter.v7c7yrf.mongodb.net/?retryWrites=true&w=majority&appName=Twitter`;
 
 class DatabaseService {
   private client: MongoClient;
   private db: Db;
+  private static instance: DatabaseService;
   constructor() {
+    // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+    const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@twitter.v7c7yrf.mongodb.net/?retryWrites=true&w=majority&appName=Twitter`;
     this.client = new MongoClient(uri);
     this.db = this.client.db(`${process.env.DB_NAME}`);
+  }
+  public static getInstance(): DatabaseService {
+    if (!DatabaseService.instance) {
+      DatabaseService.instance = new DatabaseService();
+    }
+    return DatabaseService.instance;
   }
   public async run() {
     try {
@@ -35,5 +41,5 @@ class DatabaseService {
   }
 }
 
-const databaseService = new DatabaseService();
+const databaseService = DatabaseService.getInstance();
 export default databaseService;

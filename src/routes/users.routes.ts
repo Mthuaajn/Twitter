@@ -7,7 +7,8 @@ import {
   refreshTokenValidator,
   registerValidator,
   resetPasswordValidator,
-  verifyForgotPasswordTokenValidator
+  verifyForgotPasswordTokenValidator,
+  verifyUserValidator
 } from './../middlewares/users.middlewares';
 import { validate } from './../utils/validation';
 import { Router } from 'express';
@@ -20,6 +21,7 @@ import {
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  updateMeController,
   verifyForgotPasswordController
 } from '~/controllers/users.controllers';
 
@@ -76,6 +78,7 @@ userRouter.post(
  * description: email Verify  user
  *  path: /verify-email
  * method: POST
+ *  Headers: {Authorization: Bearer <accessToken>}
  * body:
  */
 userRouter.post(
@@ -95,6 +98,7 @@ userRouter.post(
   forgotPasswordValidator,
   wrapRequestHandler(forgotPasswordController)
 );
+
 /**
  * description: verify forgot password token
  *  path: /verify-forgot-password
@@ -125,7 +129,22 @@ userRouter.post(
  * description:get me profile
  *  path: /get-me
  * method: get
+ *  Headers: {Authorization: Bearer <accessToken>}
  * body:
  */
-userRouter.get('/get-me', accessTokenValidator, wrapRequestHandler(getMeController));
+userRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController));
+
+/**
+ * description:update profile
+ *  path: /get-me
+ * method: patch
+ * Headers: {Authorization: Bearer <accessToken>}
+ * body: UserSchema
+ */
+userRouter.patch(
+  '/me',
+  accessTokenValidator,
+  verifyUserValidator,
+  wrapRequestHandler(updateMeController)
+);
 export default userRouter;

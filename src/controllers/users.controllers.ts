@@ -29,7 +29,7 @@ export const loginController = async (
 ) => {
   const { user }: any = req;
   const { _id } = user;
-  const result = await userService.login(_id.toString());
+  const result = await userService.login({ user_id: _id.toString(), verify: user.verify });
   return res.status(200).json({
     message: USERS_MESSAGE.LOGIN_SUCCESS,
     data: result
@@ -110,8 +110,11 @@ export const forgotPasswordController = async (
   req: Request<ParamsDictionary, any, ForgotPasswordReqBody>,
   res: Response
 ) => {
-  const { _id } = req.user as User;
-  const result = await userService.forgotPassword((_id as ObjectId)?.toString());
+  const { _id, verify } = req.user as User;
+  const result = await userService.forgotPassword({
+    user_id: (_id as ObjectId)?.toString(),
+    verify
+  });
   res.status(200).json(result);
 };
 
@@ -139,4 +142,10 @@ export const getMeController = async (req: Request, res: Response) => {
   const result = await userService.getMe(user_id.toString());
 
   res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const updateMeController = async (req: Request, res: Response) => {
+  res.status(HTTP_STATUS.OK).json({
+    message: 'update profile success'
+  });
 };
