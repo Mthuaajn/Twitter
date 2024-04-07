@@ -77,6 +77,45 @@ const confirm_password: ParamSchema = {
     }
   }
 };
+const nameSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGE.NAME_REQUIRED
+  },
+  isString: {
+    errorMessage: USERS_MESSAGE.NAME_MUST_BE_STRING
+  },
+  isLength: {
+    options: {
+      min: 1,
+      max: 100
+    },
+    errorMessage: USERS_MESSAGE.NAME_LENGTH
+  },
+  trim: true
+};
+const dateOfBirthSchema: ParamSchema = {
+  isISO8601: {
+    options: {
+      strict: true,
+      strictSeparator: true
+    }
+  },
+  errorMessage: USERS_MESSAGE.DAY_OF_BIRTH
+};
+const imageSchema: ParamSchema = {
+  optional: true,
+  isString: {
+    errorMessage: USERS_MESSAGE.IMAGE_MUST_BE_STRING
+  },
+  isLength: {
+    options: {
+      min: 1,
+      max: 400
+    },
+    errorMessage: USERS_MESSAGE.IMAGE_URL_LENGTH
+  },
+  trim: true
+};
 const forgot_password_token: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGE.FORGOT_PASSWORD_TOKEN_REQUIRED
@@ -152,22 +191,11 @@ export const loginValidator = validate(
     ['body']
   )
 );
+
 export const registerValidator = validate(
   checkSchema(
     {
-      name: {
-        notEmpty: {
-          errorMessage: USERS_MESSAGE.NAME_REQUIRED
-        },
-        isLength: {
-          options: {
-            min: 1,
-            max: 100
-          },
-          errorMessage: USERS_MESSAGE.NAME_LENGTH
-        },
-        trim: true
-      },
+      name: nameSchema,
       email: {
         notEmpty: {
           errorMessage: USERS_MESSAGE.EMAIL_REQUIRED
@@ -188,15 +216,7 @@ export const registerValidator = validate(
       },
       password,
       confirm_password,
-      date_of_birth: {
-        isISO8601: {
-          options: {
-            strict: true,
-            strictSeparator: true
-          }
-        },
-        errorMessage: USERS_MESSAGE.DAY_OF_BIRTH
-      }
+      date_of_birth: dateOfBirthSchema
     },
     ['body']
   )
@@ -367,15 +387,78 @@ export const resetPasswordValidator = validate(
   })
 );
 
-export const verifyUserValidator = (req: Request, res: Response, next: NextFunction) => {
-  const { verify } = req.decode_authorization as TokenPayload;
-  if (verify !== UserVerifyStatus.Verified) {
-    return next(
-      new ErrorWithStatus({
-        message: USERS_MESSAGE.USER_NOT_VERIFY,
-        status: HTTP_STATUS.FORBIDDEN
-      })
-    );
-  }
-  next();
-};
+export const updateMeValidator = validate(
+  checkSchema(
+    {
+      name: {
+        ...nameSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      date_of_birth: {
+        ...dateOfBirthSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      bio: {
+        optional: true,
+        isString: {
+          errorMessage: USERS_MESSAGE.BIO_MUST_BE_STRING
+        },
+        trim: true,
+        isLength: {
+          options: {
+            min: 1,
+            max: 200
+          },
+          errorMessage: USERS_MESSAGE.BIO_LENGTH
+        }
+      },
+      location: {
+        optional: true,
+        isString: {
+          errorMessage: USERS_MESSAGE.LOCATION_MUST_BE_STRING
+        },
+        trim: true,
+        isLength: {
+          options: {
+            min: 1,
+            max: 200
+          },
+          errorMessage: USERS_MESSAGE.LOCATION_LENGTH
+        }
+      },
+      website: {
+        optional: true,
+        isString: {
+          errorMessage: USERS_MESSAGE.WEBSITE_MUST_BE_STRING
+        },
+        trim: true,
+        isLength: {
+          options: {
+            min: 1,
+            max: 200
+          },
+          errorMessage: USERS_MESSAGE.WEBSITE_LENGTH
+        }
+      },
+      username: {
+        optional: true,
+        isString: {
+          errorMessage: USERS_MESSAGE.NAME_MUST_BE_STRING
+        },
+        isLength: {
+          options: {
+            min: 1,
+            max: 50
+          },
+          errorMessage: USERS_MESSAGE.NAME_LENGTH
+        },
+        trim: true
+      },
+      avatar: imageSchema,
+      cover_photo: imageSchema
+    },
+    ['body']
+  )
+);

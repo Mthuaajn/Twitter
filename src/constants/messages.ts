@@ -40,6 +40,15 @@ const USERS_MESSAGE = {
   FORGOT_PASSWORD_TOKEN_INVALID: 'Forgot password token is invalid',
   FORGOT_PASSWORD_TOKEN_SUCCESS: 'Forgot password token success',
   RESET_PASSWORD_SUCCESS: 'Reset password success',
-  USER_NOT_VERIFY: 'User unverified'
+  USER_NOT_VERIFY: 'User unverified',
+  NAME_MUST_BE_STRING: 'Name must be a string',
+  IMAGE_MUST_BE_STRING: 'Image must be a string',
+  IMAGE_URL_LENGTH: 'Image url must be less than 255 characters',
+  BIO_MUST_BE_STRING: 'Bio must be a string',
+  BIO_LENGTH: 'Bio must be less than 255 characters',
+  LOCATION_MUST_BE_STRING: 'Location must be a string',
+  LOCATION_LENGTH: 'Location must be less than 255 characters',
+  WEBSITE_MUST_BE_STRING: 'Website must be a string',
+  WEBSITE_LENGTH: 'Website must be less than 255 characters'
 } as const;
 export default USERS_MESSAGE;

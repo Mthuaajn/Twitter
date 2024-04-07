@@ -7,8 +7,8 @@ import {
   refreshTokenValidator,
   registerValidator,
   resetPasswordValidator,
-  verifyForgotPasswordTokenValidator,
-  verifyUserValidator
+  updateMeValidator,
+  verifyForgotPasswordTokenValidator
 } from './../middlewares/users.middlewares';
 import { validate } from './../utils/validation';
 import { Router } from 'express';
@@ -22,7 +22,8 @@ import {
   resendEmailVerifyController,
   resetPasswordController,
   updateMeController,
-  verifyForgotPasswordController
+  verifyForgotPasswordController,
+  verifyUserValidator
 } from '~/controllers/users.controllers';
 
 const userRouter = Router();
@@ -145,6 +146,7 @@ userRouter.patch(
   '/me',
   accessTokenValidator,
   verifyUserValidator,
+  updateMeValidator,
   wrapRequestHandler(updateMeController)
 );
 export default userRouter;

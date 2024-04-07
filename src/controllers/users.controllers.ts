@@ -14,6 +14,7 @@ import {
   RegisterReqBody,
   ResetPasswordReqBody,
   TokenPayload,
+  UpdateMeReqBody,
   VerifyForgotPasswordReqBody
 } from '~/models/requests/User.request';
 import { ErrorWithStatus } from '~/utils/Error';
@@ -22,6 +23,27 @@ import { JwtPayload } from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { UserVerifyStatus } from '~/constants/enums';
+
+export const verifyUserValidator = (req: Request, res: Response, next: NextFunction) => {
+  if (req.decode_authorization === undefined) {
+    return next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGE.USER_NOT_VERIFY,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    );
+  }
+  const { verify } = req.decode_authorization as TokenPayload;
+  if (verify !== UserVerifyStatus.Verified) {
+    return next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGE.USER_NOT_VERIFY,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    );
+  }
+  next();
+};
 
 export const loginController = async (
   req: Request<ParamsDictionary, any, LoginReqBody>,
@@ -144,8 +166,15 @@ export const getMeController = async (req: Request, res: Response) => {
   res.status(HTTP_STATUS.OK).json(result);
 };
 
-export const updateMeController = async (req: Request, res: Response) => {
+export const updateMeController = async (
+  req: Request<ParamsDictionary, any, UpdateMeReqBody>,
+  res: Response
+) => {
+  const { user_id } = req.decode_authorization as TokenPayload;
+  const { body } = req;
+  const result = await userService.updateMe(user_id.toString(), body);
   res.status(HTTP_STATUS.OK).json({
-    message: 'update profile success'
+    message: 'update profile success',
+    result
   });
 };
