@@ -16,6 +16,7 @@ import {
   emailVerifyController,
   forgotPasswordController,
   getMeController,
+  getProfileController,
   loginController,
   logoutController,
   registerController,
@@ -161,4 +162,11 @@ userRouter.patch(
   updateMeValidator,
   wrapRequestHandler(updateMeController)
 );
+
+/**
+ * description:get  profile
+ *  path: /:username
+ * method: get
+ */
+userRouter.get('/:username', wrapRequestHandler(getProfileController));
 export default userRouter;

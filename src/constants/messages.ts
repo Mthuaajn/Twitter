@@ -49,6 +49,9 @@ const USERS_MESSAGE = {
   LOCATION_MUST_BE_STRING: 'Location must be a string',
   LOCATION_LENGTH: 'Location must be less than 255 characters',
   WEBSITE_MUST_BE_STRING: 'Website must be a string',
-  WEBSITE_LENGTH: 'Website must be less than 255 characters'
+  WEBSITE_LENGTH: 'Website must be less than 255 characters',
+  GET_PROFILE_SUCCESS: 'Get profile success',
+  GET_PROFILE_FAILED: 'Get profile failed',
+  
 } as const;
 export default USERS_MESSAGE;

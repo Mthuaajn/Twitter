@@ -9,6 +9,7 @@ import { checkSchema } from 'express-validator';
 import {
   emailVerifyReqBody,
   ForgotPasswordReqBody,
+  GetProfileReqParams,
   LoginReqBody,
   LogoutReqBody,
   RegisterReqBody,
@@ -176,5 +177,13 @@ export const updateMeController = async (
   res.status(HTTP_STATUS.OK).json({
     message: 'update profile success',
     result
+  });
+};
+export const getProfileController = async (req: Request<GetProfileReqParams>, res: Response) => {
+  const { username } = req.params;
+  const user = await userService.getProfile(username);
+  res.status(HTTP_STATUS.OK).json({
+    message: USERS_MESSAGE.GET_PROFILE_SUCCESS,
+    data: user
   });
 };
