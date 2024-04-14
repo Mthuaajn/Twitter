@@ -59,6 +59,9 @@ const USERS_MESSAGE = {
   UNFOLLOW_SUCCESS: 'Unfollow success',
   NOT_SELF_FOLLOWING: 'user not follow self',
   USERNAME_INVALID:
-    'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers'
+    'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
+  OLD_PASSWORD_INCORRECT: 'Old password not is incorrect',
+  CONFIRM_PASSWORD_NOT_MATCH: 'Confirm password does not match',
+  CHANGE_PASSWORD_SUCCESS: 'Change password success'
 } as const;
 export default USERS_MESSAGE;

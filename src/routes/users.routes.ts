@@ -1,6 +1,7 @@
 import { wrapRequestHandler } from '~/utils/handlers';
 import {
   accessTokenValidator,
+  changePasswordValidator,
   emailVerifyTokenValidator,
   followedValidator,
   forgotPasswordValidator,
@@ -15,6 +16,7 @@ import {
 import { validate } from './../utils/validation';
 import { Router } from 'express';
 import {
+  changePasswordController,
   emailVerifyController,
   followedController,
   forgotPasswordController,
@@ -203,4 +205,18 @@ userRouter.delete(
   wrapRequestHandler(unFollowedController)
 );
 
+/**
+ * description:change password
+ *  path: /change-password
+ * method: put
+ * Headers: {Authorization: Bearer <accessToken>}
+ * Body: {old_password:string, new_password:string, confirm_password:string}
+ */
+userRouter.put(
+  '/change-password',
+  accessTokenValidator,
+  verifyUserValidator,
+  changePasswordValidator,
+  wrapRequestHandler(changePasswordController)
+);
 export default userRouter;

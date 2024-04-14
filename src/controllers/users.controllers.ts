@@ -7,6 +7,7 @@ import databaseService from '~/services/db.services';
 import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
 import {
+  ChangePasswordReqBody,
   emailVerifyReqBody,
   FollowUserReqBody,
   ForgotPasswordReqBody,
@@ -201,5 +202,15 @@ export const unFollowedController = async (req: Request<UnFollowUserReqParams>, 
   const { user_id } = req.decode_authorization as TokenPayload;
   const { user_id: followed_user_id } = req.params;
   const result = await userService.unFollow(user_id.toString(), followed_user_id.toString());
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const changePasswordController = async (
+  req: Request<ParamsDictionary, any, ChangePasswordReqBody>,
+  res: Response
+) => {
+  const { user_id } = req.decode_authorization as TokenPayload;
+  const { new_password } = req.body;
+  const result = await userService.changePassword(user_id.toString(), new_password);
   res.status(HTTP_STATUS.OK).json(result);
 };
