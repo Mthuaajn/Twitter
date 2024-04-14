@@ -8,6 +8,7 @@ import userService from '~/services/users.services';
 import { checkSchema } from 'express-validator';
 import {
   emailVerifyReqBody,
+  FollowUserReqBody,
   ForgotPasswordReqBody,
   GetProfileReqParams,
   LoginReqBody,
@@ -15,6 +16,7 @@ import {
   RegisterReqBody,
   ResetPasswordReqBody,
   TokenPayload,
+  UnFollowUserReqParams,
   UpdateMeReqBody,
   VerifyForgotPasswordReqBody
 } from '~/models/requests/User.request';
@@ -188,9 +190,16 @@ export const getProfileController = async (req: Request<GetProfileReqParams>, re
   });
 };
 
-export const followedController = async (req: Request, res: Response) => {
+export const followedController = async (req: Request<FollowUserReqBody>, res: Response) => {
   const { user_id } = req.decode_authorization as TokenPayload;
   const { followed_user_id } = req.body;
   const result = await userService.follow(user_id.toString(), followed_user_id.toString());
   res.json(result);
+};
+
+export const unFollowedController = async (req: Request<UnFollowUserReqParams>, res: Response) => {
+  const { user_id } = req.decode_authorization as TokenPayload;
+  const { user_id: followed_user_id } = req.params;
+  const result = await userService.unFollow(user_id.toString(), followed_user_id.toString());
+  res.status(HTTP_STATUS.OK).json(result);
 };

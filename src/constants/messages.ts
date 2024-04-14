@@ -54,6 +54,9 @@ const USERS_MESSAGE = {
   GET_PROFILE_FAILED: 'Get profile failed',
   FOLLOWED_USER_ID_REQUIRED: 'Followed user id is required',
   FOLLOWED_USER: 'Followed user',
-  FOLLOW_SUCCESS: 'Follow success'
+  FOLLOW_SUCCESS: 'Follow success',
+  FOLLOWED_USER_NOT_FOUND: 'Followed user not found',
+  UNFOLLOW_SUCCESS: 'Unfollow success',
+  NOT_SELF_FOLLOWING: 'user not follow self'
 } as const;
 export default USERS_MESSAGE;

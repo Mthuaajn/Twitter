@@ -8,6 +8,7 @@ import {
   refreshTokenValidator,
   registerValidator,
   resetPasswordValidator,
+  unFollowedValidator,
   updateMeValidator,
   verifyForgotPasswordTokenValidator
 } from './../middlewares/users.middlewares';
@@ -24,6 +25,7 @@ import {
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  unFollowedController,
   updateMeController,
   verifyForgotPasswordController,
   verifyUserValidator
@@ -186,4 +188,19 @@ userRouter.post(
   verifyUserValidator,
   wrapRequestHandler(followedController)
 );
+
+/**
+ * description:unFollow user
+ *  path: /follow/:user_id
+ * method: Delete
+ * Headers: {Authorization: Bearer <accessToken>}
+ */
+userRouter.delete(
+  '/follow/:user_id',
+  accessTokenValidator,
+  unFollowedValidator,
+  verifyUserValidator,
+  wrapRequestHandler(unFollowedController)
+);
+
 export default userRouter;

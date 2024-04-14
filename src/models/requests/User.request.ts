@@ -1,3 +1,4 @@
+import { ParamsDictionary } from 'express-serve-static-core';
 import { JwtPayload } from 'jsonwebtoken';
 import { tokenType } from '~/constants/enums';
 
@@ -52,4 +53,12 @@ export interface UpdateMeReqBody {
 
 export interface GetProfileReqParams {
   username: string;
+}
+
+export interface FollowUserReqBody extends ParamsDictionary {
+  followed_user_id: string;
+}
+
+export interface UnFollowUserReqParams extends ParamsDictionary {
+  user_id: string;
 }
