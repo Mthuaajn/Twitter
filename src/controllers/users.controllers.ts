@@ -29,7 +29,7 @@ export const verifyUserValidator = (req: Request, res: Response, next: NextFunct
   if (req.decode_authorization === undefined) {
     return next(
       new ErrorWithStatus({
-        message: USERS_MESSAGE.USER_NOT_VERIFY,
+        message: USERS_MESSAGE.USER_NOT_FOUND,
         status: HTTP_STATUS.FORBIDDEN
       })
     );
@@ -186,4 +186,11 @@ export const getProfileController = async (req: Request<GetProfileReqParams>, re
     message: USERS_MESSAGE.GET_PROFILE_SUCCESS,
     data: user
   });
+};
+
+export const followedController = async (req: Request, res: Response) => {
+  const { user_id } = req.decode_authorization as TokenPayload;
+  const { followed_user_id } = req.body;
+  const result = await userService.follow(user_id.toString(), followed_user_id.toString());
+  res.json(result);
 };

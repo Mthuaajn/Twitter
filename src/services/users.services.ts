@@ -1,16 +1,19 @@
 import { ObjectId } from 'mongodb';
 import { tokenType, UserVerifyStatus } from './../constants/enums';
-import User from '~/models/schemas/User.schema';
-import databaseService from './db.services';
 import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.request';
 import { signToken } from '~/utils/jwt';
 import { hashPassword } from '~/utils/crypto';
+import { ErrorWithStatus } from '~/utils/Error';
+import User from '~/models/schemas/User.schema';
+import databaseService from './db.services';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import dotenv from 'dotenv';
 import USERS_MESSAGE from '~/constants/messages';
-import { ErrorWithStatus } from '~/utils/Error';
 import HTTP_STATUS from '~/constants/httpStatus';
+import Follower from '~/models/schemas/Follower.schema';
+
 dotenv.config();
+
 class UserService {
   private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     return signToken({
@@ -157,7 +160,7 @@ class UserService {
       }
     );
     // Gỉa bộ gửi email
-    console.log('Rensend verify email: ', email_verify_token);
+    console.log('Resend verify email: ', email_verify_token);
     return { message: USERS_MESSAGE.EMAIL_RESEND_SUCCESS };
   }
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
@@ -262,6 +265,25 @@ class UserService {
       });
     }
     return user;
+  }
+  async follow(user_id: string, followed_user_id: string) {
+    const follower = await databaseService.follower.findOne({
+      followed_user_id: new ObjectId(followed_user_id)
+    });
+    if (follower !== null) {
+      return {
+        message: USERS_MESSAGE.FOLLOWED_USER
+      };
+    }
+    await databaseService.follower.insertOne(
+      new Follower({
+        user_id: new ObjectId(user_id),
+        followed_user_id: new ObjectId(followed_user_id)
+      })
+    );
+    return {
+      message: USERS_MESSAGE.FOLLOW_SUCCESS
+    };
   }
 }
 

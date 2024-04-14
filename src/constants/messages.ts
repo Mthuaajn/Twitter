@@ -52,6 +52,8 @@ const USERS_MESSAGE = {
   WEBSITE_LENGTH: 'Website must be less than 255 characters',
   GET_PROFILE_SUCCESS: 'Get profile success',
   GET_PROFILE_FAILED: 'Get profile failed',
-  
+  FOLLOWED_USER_ID_REQUIRED: 'Followed user id is required',
+  FOLLOWED_USER: 'Followed user',
+  FOLLOW_SUCCESS: 'Follow success'
 } as const;
 export default USERS_MESSAGE;

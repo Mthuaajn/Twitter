@@ -462,3 +462,30 @@ export const updateMeValidator = validate(
     ['body']
   )
 );
+
+export const followedValidator = validate(
+  checkSchema({
+    followed_user_id: {
+      notEmpty: {
+        errorMessage: USERS_MESSAGE.FOLLOWED_USER_ID_REQUIRED
+      },
+      custom: {
+        options: async (value, { req: Request }) => {
+          if (!ObjectId.isValid(value)) {
+            throw new ErrorWithStatus({
+              message: USERS_MESSAGE.FOLLOWED_USER_ID_REQUIRED,
+              status: HTTP_STATUS.UNAUTHORIZED
+            });
+          }
+          const followed_user = await databaseService.users.findOne({ _id: new ObjectId(value) });
+          if (followed_user === null) {
+            throw new ErrorWithStatus({
+              message: USERS_MESSAGE.USER_NOT_FOUND,
+              status: HTTP_STATUS.NOT_FOUND
+            });
+          }
+        }
+      }
+    }
+  })
+);
