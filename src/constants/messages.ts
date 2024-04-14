@@ -57,6 +57,8 @@ const USERS_MESSAGE = {
   FOLLOW_SUCCESS: 'Follow success',
   FOLLOWED_USER_NOT_FOUND: 'Followed user not found',
   UNFOLLOW_SUCCESS: 'Unfollow success',
-  NOT_SELF_FOLLOWING: 'user not follow self'
+  NOT_SELF_FOLLOWING: 'user not follow self',
+  USERNAME_INVALID:
+    'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers'
 } as const;
 export default USERS_MESSAGE;
