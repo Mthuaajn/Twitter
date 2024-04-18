@@ -62,6 +62,7 @@ const USERS_MESSAGE = {
     'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
   OLD_PASSWORD_INCORRECT: 'Old password not is incorrect',
   CONFIRM_PASSWORD_NOT_MATCH: 'Confirm password does not match',
-  CHANGE_PASSWORD_SUCCESS: 'Change password success'
+  CHANGE_PASSWORD_SUCCESS: 'Change password success',
+  GMAIL_NOT_VERIFIED: 'Gmail is not verified'
 } as const;
 export default USERS_MESSAGE;

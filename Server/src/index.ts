@@ -3,7 +3,7 @@ import express, { Application } from 'express';
 import DatabaseService from '~/services/db.services';
 import userRouter from '~/routes/users.routes';
 export class App {
-  private port: number = 3000;
+  private port: number = 4000;
   private app: Application;
   private userRouter = userRouter;
   constructor() {

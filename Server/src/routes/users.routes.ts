@@ -24,6 +24,7 @@ import {
   getProfileController,
   loginController,
   logoutController,
+  oauthController,
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
@@ -219,4 +220,6 @@ userRouter.put(
   changePasswordValidator,
   wrapRequestHandler(changePasswordController)
 );
+
+userRouter.get('/oauth/google', wrapRequestHandler(oauthController));
 export default userRouter;

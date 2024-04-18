@@ -27,7 +27,8 @@ import { JwtPayload } from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { UserVerifyStatus } from '~/constants/enums';
-
+import { config } from 'dotenv';
+config();
 export const verifyUserValidator = (req: Request, res: Response, next: NextFunction) => {
   if (req.decode_authorization === undefined) {
     return next(
@@ -213,4 +214,11 @@ export const changePasswordController = async (
   const { new_password } = req.body;
   const result = await userService.changePassword(user_id.toString(), new_password);
   res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const oauthController = async (req: Request, res: Response) => {
+  const { code } = req.query;
+  const result = await userService.oauth(code as string);
+  const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.accessToken}&refresh_token=${result.refreshToken}&new_user=${result.newUser}&verify=${result.verify}`;
+  return res.redirect(urlRedirect);
 };
