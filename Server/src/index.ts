@@ -2,7 +2,8 @@ import { defaultErrorHandlers } from './middlewares/error.middlewares';
 import express, { Application } from 'express';
 import DatabaseService from '~/services/db.services';
 import userRouter from '~/routes/users.routes';
-import mediaRouter from './routes/medias.routes';
+import mediaRouter from '~/routes/medias.routes';
+import { initFileUpload } from '~/utils/file';
 export class App {
   private port: number = 4000;
   private app: Application;
@@ -13,6 +14,7 @@ export class App {
     this.setup();
   }
   private setup(): void {
+    initFileUpload();
     this.app.use(express.json());
     this.app.use('/api/v1/users', this.userRouter);
     this.app.use('/api/v1/media', this.mediaRouter);
