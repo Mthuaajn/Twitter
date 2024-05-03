@@ -5,6 +5,7 @@ import userRouter from '~/routes/users.routes';
 import mediaRouter from '~/routes/medias.routes';
 import { initFileUpload } from '~/utils/file';
 import { config } from 'dotenv';
+import { UPLOAD_DIR } from './constants/dir';
 config();
 export class App {
   private port: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
@@ -18,6 +19,7 @@ export class App {
   private setup(): void {
     initFileUpload();
     this.app.use(express.json());
+    this.app.use('/medias', express.static(UPLOAD_DIR));
     this.app.use('/api/v1/users', this.userRouter);
     this.app.use('/api/v1/media', this.mediaRouter);
     this.app.use('*', defaultErrorHandlers);

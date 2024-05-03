@@ -9,6 +9,7 @@ import { handleFileUploadImageSingle } from '~/utils/file';
 export const uploadSingleImageController = async (req: Request, res: Response) => {
   const result = await mediasService.handleUploadSingleImage(req);
   return res.status(HTTP_STATUS.OK).json({
+    message: 'Upload image single successfully',
     result: result
   });
 };
