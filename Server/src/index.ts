@@ -4,8 +4,10 @@ import DatabaseService from '~/services/db.services';
 import userRouter from '~/routes/users.routes';
 import mediaRouter from '~/routes/medias.routes';
 import { initFileUpload } from '~/utils/file';
+import { config } from 'dotenv';
+config();
 export class App {
-  private port: number = 4000;
+  private port: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
   private app: Application;
   private userRouter = userRouter;
   private mediaRouter = mediaRouter;
