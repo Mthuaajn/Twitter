@@ -1,6 +1,5 @@
 import { wrapRequestHandler } from './../utils/handlers';
 import { Router } from 'express';
-import { uploadSingleImageController } from '~/controllers/medias.controllers';
 import { serveImageController } from '~/controllers/static.controllers';
 
 const staticRouter = Router();
