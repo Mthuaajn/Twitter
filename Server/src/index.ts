@@ -1,3 +1,4 @@
+import { UPLOAD_DIR } from '~/constants/dir';
 import { defaultErrorHandlers } from './middlewares/error.middlewares';
 import express, { Application } from 'express';
 import DatabaseService from '~/services/db.services';
@@ -5,7 +6,7 @@ import userRouter from '~/routes/users.routes';
 import mediaRouter from '~/routes/medias.routes';
 import { initFileUpload } from '~/utils/file';
 import { config } from 'dotenv';
-import { UPLOAD_DIR } from './constants/dir';
+import { UPLOAD_IMAGE_DIR } from './constants/dir';
 import staticRouter from './routes/static.routes';
 config();
 export class App {
