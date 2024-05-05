@@ -39,6 +39,9 @@ export default function home() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <video controls width={500}>
+        <source src="http://localhost:4000/api/v1/static/video-stream/f438d36c79473751aff36ed00.mp4" type="video/mp4" />
+      </video>
       <h1>Google OAuth 2.0</h1>
 
       <p className="read-the-docs">

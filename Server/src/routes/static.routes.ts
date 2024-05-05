@@ -1,9 +1,9 @@
 import { wrapRequestHandler } from './../utils/handlers';
 import { Router } from 'express';
-import { serveImageController, serveVideoController } from '~/controllers/static.controllers';
+import { serveImageController, serveVideoStreamController } from '~/controllers/static.controllers';
 
 const staticRouter = Router();
 
 staticRouter.get('/upload-image/:name', serveImageController);
-staticRouter.get('/upload-video/:name', serveVideoController);
+staticRouter.get('/video-stream/:name', wrapRequestHandler(serveVideoStreamController));
 export default staticRouter;

@@ -1,4 +1,4 @@
-import { UPLOAD_DIR } from '~/constants/dir';
+import { UPLOAD_VIDEO_DIR } from './constants/dir';
 import { defaultErrorHandlers } from './middlewares/error.middlewares';
 import express, { Application } from 'express';
 import DatabaseService from '~/services/db.services';
@@ -22,7 +22,7 @@ export class App {
   private setup(): void {
     initFileUpload();
     this.app.use(express.json());
-    this.app.use('/medias', express.static(UPLOAD_DIR));
+    this.app.use('/medias', express.static(UPLOAD_VIDEO_DIR));
     this.app.use('/api/v1/users', this.userRouter);
     this.app.use('/api/v1/media', this.mediaRouter);
     this.app.use('/api/v1/static', this.staticRouter);
