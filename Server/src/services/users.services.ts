@@ -186,6 +186,28 @@ class UserService {
       };
     }
   }
+  async refreshToken({
+    user_id,
+    refreshToken,
+    verify
+  }: {
+    user_id: string;
+    refreshToken: string;
+    verify: UserVerifyStatus;
+  }) {
+    const [newAccessToken, newRefreshToken] = await Promise.all([
+      this.signAccessToken({ user_id, verify }),
+      this.signRefreshToken({ user_id, verify }),
+      databaseService.refreshToken.deleteOne({ token: refreshToken })
+    ]);
+    await databaseService.refreshToken.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: newRefreshToken })
+    );
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
+    };
+  }
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const [accessToken, refreshToken] = await this.createRefreshTokenAndAccessToken({
       user_id,

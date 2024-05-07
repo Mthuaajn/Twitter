@@ -63,6 +63,7 @@ const USERS_MESSAGE = {
   OLD_PASSWORD_INCORRECT: 'Old password not is incorrect',
   CONFIRM_PASSWORD_NOT_MATCH: 'Confirm password does not match',
   CHANGE_PASSWORD_SUCCESS: 'Change password success',
-  GMAIL_NOT_VERIFIED: 'Gmail is not verified'
+  GMAIL_NOT_VERIFIED: 'Gmail is not verified',
+  REFRESH_TOKEN_SUCCESS: 'Refresh token success'
 } as const;
 export default USERS_MESSAGE;

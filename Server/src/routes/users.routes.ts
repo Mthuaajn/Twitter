@@ -25,6 +25,7 @@ import {
   loginController,
   logoutController,
   oauthController,
+  refreshTokenController,
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
@@ -69,9 +70,11 @@ userRouter.post(
   wrapRequestHandler(logoutController)
 );
 
-userRouter.post('/refresh-token', (req, res) => {
-  res.send('refresh token');
-});
+userRouter.post(
+  '/refresh-token',
+  refreshTokenValidator,
+  wrapRequestHandler(refreshTokenController)
+);
 
 /**
  * description: email Verify  user
