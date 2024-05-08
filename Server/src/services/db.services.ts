@@ -34,6 +34,11 @@ class DatabaseService {
       throw err;
     }
   }
+  public getIndex() {
+    this.users.createIndex({ email: 1 }, { unique: true });
+    this.users.createIndex({ username: 1 }, { unique: true });
+    this.users.createIndex({ email: 1, password: 1 });
+  }
   public get users(): Collection<User> {
     return this.db.collection(process.env.DB_USER_COLLECTION as string);
   }

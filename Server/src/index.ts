@@ -30,7 +30,9 @@ export class App {
   }
   public async start(): Promise<void> {
     try {
-      await DatabaseService.run().catch(console.dir);
+      await DatabaseService.run().then(() => {
+        DatabaseService.getIndex();
+      })
       this.app.listen(this.port, () => {
         console.log(`app running on port ${this.port}`);
       });
