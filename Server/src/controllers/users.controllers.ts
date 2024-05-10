@@ -225,8 +225,8 @@ export const oauthController = async (req: Request, res: Response) => {
 
 export const refreshTokenController = async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
-  const { user_id, verify } = req.decode_refresh_token as JwtPayload;
-  const result = await userService.refreshToken({ user_id, refreshToken, verify });
+  const { user_id, verify, exp } = req.decode_refresh_token as TokenPayload;
+  const result = await userService.refreshToken({ user_id, refreshToken, verify, exp });
   res.status(HTTP_STATUS.OK).json({
     message: USERS_MESSAGE.REFRESH_TOKEN_SUCCESS,
     result

@@ -32,7 +32,7 @@ export class App {
     try {
       await DatabaseService.run().then(() => {
         DatabaseService.getIndex();
-      })
+      });
       this.app.listen(this.port, () => {
         console.log(`app running on port ${this.port}`);
       });
