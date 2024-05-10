@@ -34,17 +34,31 @@ class DatabaseService {
       throw err;
     }
   }
-  public getUserIndex() {
-    this.users.createIndex({ email: 1 }, { unique: true });
-    this.users.createIndex({ username: 1 }, { unique: true });
-    this.users.createIndex({ email: 1, password: 1 });
+  public async getIndex() {
+    await this.getUserIndex();
+    await this.getFollowersIndex();
+    await this.getRefreshTokenIndex();
   }
-  public getFollowersIndex() {
-    this.follower.createIndex({ user_id: 1, followed_user_id: 1 }, { unique: true });
+  public async getUserIndex() {
+    const exists = await this.users.indexExists(['email_1', 'email_1_password_1', 'username_1']);
+    if (!exists) {
+      this.users.createIndex({ email: 1 }, { unique: true });
+      this.users.createIndex({ username: 1 }, { unique: true });
+      this.users.createIndex({ email: 1, password: 1 });
+    }
   }
-  public getRefreshTokenIndex() {
-    this.refreshToken.createIndex({ token: 1 });
-    this.refreshToken.createIndex({ exp: 1 }, { expireAfterSeconds: 0 });
+  public async getFollowersIndex() {
+    const exists = await this.users.indexExists(['user_id_1_followed_user_id_1']);
+    if (!exists) {
+      this.follower.createIndex({ user_id: 1, followed_user_id: 1 }, { unique: true });
+    }
+  }
+  public async getRefreshTokenIndex() {
+    const exists = await this.users.indexExists(['token_1']);
+    if (!exists) {
+      this.refreshToken.createIndex({ token: 1 });
+      this.refreshToken.createIndex({ exp: 1 }, { expireAfterSeconds: 0 });
+    }
   }
   public get users(): Collection<User> {
     return this.db.collection(process.env.DB_USER_COLLECTION as string);

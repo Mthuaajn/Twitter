@@ -31,9 +31,7 @@ export class App {
   public async start(): Promise<void> {
     try {
       await DatabaseService.run().then(() => {
-        DatabaseService.getUserIndex();
-        DatabaseService.getFollowersIndex();
-        DatabaseService.getRefreshTokenIndex();
+        DatabaseService.getIndex();
       });
       this.app.listen(this.port, () => {
         console.log(`app running on port ${this.port}`);
