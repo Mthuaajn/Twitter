@@ -1,4 +1,4 @@
-const USERS_MESSAGE = {
+export const USERS_MESSAGE = {
   VALIDATION_ERROR: 'Validation error',
   EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect',
   NAME_REQUIRED: 'Name is required',
@@ -66,4 +66,15 @@ const USERS_MESSAGE = {
   GMAIL_NOT_VERIFIED: 'Gmail is not verified',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success'
 } as const;
-export default USERS_MESSAGE;
+
+export const TWEET_MESSAGE = {
+  INVALID_TYPE: 'Invalid type',
+  INVALID_AUDIENCE: 'Invalid audience',
+  PARENT_ID_MUST_BE_A_VALID_TWEET_ID: 'parent id must be a valid tweet id',
+  PARENT_ID_MUST_BE_NULL: 'Parent id must be null',
+  CONTENT_MUST_BE_EMPTY_STRING: 'Content must be empty string',
+  CONTENT_MUST_BE_STRING: 'Content must be string',
+  HASHTAG_MUST_BE_ARRAY_STRING: 'Hashtags must be array string',
+  MENTIONS_MUST_BE_ARRAY_OBJECT_ID: 'Mentions must be array object id',
+  MEDIAS_MUST_BE_ARRAY_MEDIA_TYPE: 'Medias must be array media type'
+} as const;
