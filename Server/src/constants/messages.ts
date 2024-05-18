@@ -76,5 +76,6 @@ export const TWEET_MESSAGE = {
   CONTENT_MUST_BE_STRING: 'Content must be string',
   HASHTAG_MUST_BE_ARRAY_STRING: 'Hashtags must be array string',
   MENTIONS_MUST_BE_ARRAY_OBJECT_ID: 'Mentions must be array object id',
-  MEDIAS_MUST_BE_ARRAY_MEDIA_TYPE: 'Medias must be array media type'
+  MEDIAS_MUST_BE_ARRAY_MEDIA_TYPE: 'Medias must be array media type',
+  CREATED: 'Tweet created successfully'
 } as const;
