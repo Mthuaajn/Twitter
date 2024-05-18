@@ -13,14 +13,14 @@ export const createTweetValidator = validate(
   checkSchema({
     type: {
       isIn: {
-        options: TweetTypeValues,
+        options: [TweetTypeValues],
         errorMessage: TWEET_MESSAGE.INVALID_TYPE
       }
     },
     audience: {
       optional: true,
       isIn: {
-        options: AudienceValues,
+        options: [AudienceValues],
         errorMessage: TWEET_MESSAGE.INVALID_AUDIENCE
       }
     },
@@ -59,6 +59,7 @@ export const createTweetValidator = validate(
           ) {
             throw new Error(TWEET_MESSAGE.CONTENT_MUST_BE_STRING);
           }
+          return true;
         }
       }
     },
@@ -74,12 +75,13 @@ export const createTweetValidator = validate(
       }
     },
     mentions: {
-      isArray: true,  
+      isArray: true,
       custom: {
         options: (value, { req }) => {
           if (!value.every((item: any) => !ObjectId.isValid(item))) {
             throw new Error(TWEET_MESSAGE.MENTIONS_MUST_BE_ARRAY_OBJECT_ID);
           }
+          return true;
         }
       }
     },
@@ -88,7 +90,7 @@ export const createTweetValidator = validate(
       custom: {
         options: (value, { req }) => {
           if (
-            value.every((item: any) => {
+            !value.every((item: any) => {
               return item.url !== 'string' || !MediaTypes.includes(item.type);
             })
           ) {

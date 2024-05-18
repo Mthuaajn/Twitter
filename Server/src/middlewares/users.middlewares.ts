@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import USERS_MESSAGE from '~/constants/messages';
+import { USERS_MESSAGE } from '~/constants/messages';
 import { checkSchema, ParamSchema } from 'express-validator';
 import userService from '~/services/users.services';
 import { ErrorWithStatus } from '~/utils/Error';

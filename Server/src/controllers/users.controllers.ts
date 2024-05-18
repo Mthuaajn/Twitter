@@ -22,7 +22,7 @@ import {
   VerifyForgotPasswordReqBody
 } from '~/models/requests/User.request';
 import { ErrorWithStatus } from '~/utils/Error';
-import USERS_MESSAGE from '~/constants/messages';
+import { USERS_MESSAGE } from '~/constants/messages';
 import { JwtPayload } from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import HTTP_STATUS from '~/constants/httpStatus';

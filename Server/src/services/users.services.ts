@@ -10,7 +10,7 @@ import User from '~/models/schemas/User.schema';
 import databaseService from './db.services';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import dotenv from 'dotenv';
-import USERS_MESSAGE from '~/constants/messages';
+import { USERS_MESSAGE } from '~/constants/messages';
 import HTTP_STATUS from '~/constants/httpStatus';
 import Follower from '~/models/schemas/Follower.schema';
 import { access } from 'fs';
