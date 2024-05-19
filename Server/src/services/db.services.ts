@@ -1,3 +1,4 @@
+import { HashTag } from './../models/schemas/HashTag.schema';
 import { MongoClient, ServerApiVersion, Db, Collection } from 'mongodb';
 import dotenv from 'dotenv';
 import User from '~/models/schemas/User.schema';
@@ -72,6 +73,9 @@ class DatabaseService {
   }
   public get follower(): Collection<Follower> {
     return this.db.collection(process.env.DB_FOLLOWER_COLLECTION as string);
+  }
+  public get hashTags(): Collection<HashTag> {
+    return this.db.collection(process.env.DB_HASHTAGS_COLLECTION as string);
   }
 }
 
