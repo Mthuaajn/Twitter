@@ -5,6 +5,9 @@ import { validate } from './../utils/validation';
 import { TWEET_MESSAGE } from '~/constants/messages';
 import { ObjectId } from 'mongodb';
 import { isEmpty } from 'lodash';
+import { ErrorWithStatus } from '~/utils/Error';
+import databaseService from '~/services/db.services';
+import HTTP_STATUS from '~/constants/httpStatus';
 
 const TweetTypeValues = numberEnumToArray(TweetType);
 const AudienceValues = numberEnumToArray(TweetAudience);
@@ -101,4 +104,32 @@ export const createTweetValidator = validate(
       }
     }
   })
+);
+
+export const tweetIdValidator = validate(
+  checkSchema(
+    {
+      tweet_id: {
+        custom: {
+          options: async (value, { req: Request }) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: TWEET_MESSAGE.OBJECT_ID_INVALID,
+                status: HTTP_STATUS.BAD_REQUEST
+              });
+            }
+            const tweet = await databaseService.tweets.findOne({ _id: new ObjectId(value) });
+            if (!tweet) {
+              throw new ErrorWithStatus({
+                message: TWEET_MESSAGE.NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              });
+            }
+            return true;
+          }
+        }
+      }
+    },
+    ['body', 'params']
+  )
 );

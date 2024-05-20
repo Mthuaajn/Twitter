@@ -1,3 +1,4 @@
+import { tweetIdValidator } from './../middlewares/tweet.meddilewares';
 import {
   createBookMarkController,
   unBookMarkController
@@ -13,6 +14,7 @@ bookMarkRouter.post(
   '/',
   accessTokenValidator,
   verifyUserValidator,
+  tweetIdValidator,
   wrapRequestHandler(createBookMarkController)
 );
 
@@ -20,6 +22,7 @@ bookMarkRouter.delete(
   '/tweets/:tweetId',
   accessTokenValidator,
   verifyUserValidator,
+  tweetIdValidator,
   wrapRequestHandler(unBookMarkController)
 );
 export default bookMarkRouter;
