@@ -118,7 +118,9 @@ export const tweetIdValidator = validate(
                 status: HTTP_STATUS.BAD_REQUEST
               });
             }
-            const tweet = await databaseService.tweets.findOne({ _id: new ObjectId(value) });
+            const tweet = await databaseService.tweets.findOne({
+              _id: new ObjectId(value as string)
+            });
             if (!tweet) {
               throw new ErrorWithStatus({
                 message: TWEET_MESSAGE.NOT_FOUND,
