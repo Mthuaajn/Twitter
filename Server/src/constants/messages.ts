@@ -83,3 +83,7 @@ export const TWEET_MESSAGE = {
 export const BOOKMARK_MESSAGE = {
   BOOKMARK_CREATED: 'Bookmark created successfully'
 };
+
+export const LIKE_MESSAGE = {
+  LIKE_CREATED: 'Like created successfully'
+};

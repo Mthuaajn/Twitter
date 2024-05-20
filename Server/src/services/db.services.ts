@@ -6,6 +6,7 @@ import User from '~/models/schemas/User.schema';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Follower from '~/models/schemas/Follower.schema';
 import Tweet from '~/models/schemas/Tweet.schema';
+import { Like } from '~/models/schemas/Like.schema';
 dotenv.config();
 
 class DatabaseService {
@@ -80,6 +81,9 @@ class DatabaseService {
   }
   public get bookmark(): Collection<BookMark> {
     return this.db.collection(process.env.DB_BOOKMARK_COLLECTION as string);
+  }
+  public get like(): Collection<Like> {
+    return this.db.collection(process.env.DB_LIKE_COLLECTION as string);
   }
 }
 
