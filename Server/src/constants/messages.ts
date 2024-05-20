@@ -79,7 +79,8 @@ export const TWEET_MESSAGE = {
   MEDIAS_MUST_BE_ARRAY_MEDIA_TYPE: 'Medias must be array media type',
   CREATED: 'Tweet created successfully',
   NOT_FOUND: 'Tweet not found',
-  OBJECT_ID_INVALID: 'Object id is invalid'
+  OBJECT_ID_INVALID: 'Object id is invalid',
+  GET_TWEET_SUCCESS: 'Get tweet success'
 } as const;
 
 export const BOOKMARK_MESSAGE = {

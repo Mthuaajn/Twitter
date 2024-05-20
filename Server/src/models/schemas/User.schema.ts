@@ -12,6 +12,7 @@ interface UserType {
   email_verify_token?: string;
   forgot_password_token?: string;
   verify?: UserVerifyStatus;
+  tweet_circle?: ObjectId[];
 
   bio?: string;
   location?: string;
@@ -32,6 +33,7 @@ class User {
   email_verify_token: string; // jwt hoặc '' nếu đã xác thực email
   forgot_password_token: string; // jwt hoặc '' nếu đã xác thực email
   verify: UserVerifyStatus;
+  tweet_circle: ObjectId[];
 
   bio: string; // optional
   location: string; // optional
@@ -57,6 +59,7 @@ class User {
     this.username = user.username || '';
     this.avatar = user.avatar || '';
     this.cover_photo = user.cover_photo || '';
+    this.tweet_circle = user.tweet_circle || [];
   }
 }
 

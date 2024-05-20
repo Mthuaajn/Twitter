@@ -13,3 +13,14 @@ export const createTweetController = async (
   const result = await tweetService.createTweet(user_id, req.body);
   res.json({ message: TWEET_MESSAGE.CREATED, result });
 };
+
+export const getTweetController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response
+) => {
+  const result = await tweetService.getTweet(req.params.tweet_id);
+  res.json({
+    message: TWEET_MESSAGE.GET_TWEET_SUCCESS,
+    result
+  });
+};
