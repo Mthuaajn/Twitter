@@ -79,3 +79,7 @@ export const TWEET_MESSAGE = {
   MEDIAS_MUST_BE_ARRAY_MEDIA_TYPE: 'Medias must be array media type',
   CREATED: 'Tweet created successfully'
 } as const;
+
+export const BOOKMARK_MESSAGE = {
+  BOOKMARK_CREATED: 'Bookmark created successfully'
+};

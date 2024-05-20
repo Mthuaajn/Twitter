@@ -1,3 +1,4 @@
+import { BookMark } from './../models/schemas/BookMark.schema';
 import { HashTag } from './../models/schemas/HashTag.schema';
 import { MongoClient, ServerApiVersion, Db, Collection } from 'mongodb';
 import dotenv from 'dotenv';
@@ -76,6 +77,9 @@ class DatabaseService {
   }
   public get hashTags(): Collection<HashTag> {
     return this.db.collection(process.env.DB_HASHTAGS_COLLECTION as string);
+  }
+  public get bookmark(): Collection<BookMark> {
+    return this.db.collection(process.env.DB_BOOKMARK_COLLECTION as string);
   }
 }
 
