@@ -23,6 +23,13 @@ class BookMarkService {
     );
     return result;
   }
+  async unBookMark(user_id: string, tweet_id: string) {
+    const result = await databaseService.bookmark.findOneAndDelete({
+      user_id: new ObjectId(user_id),
+      tweet_id: new ObjectId(tweet_id)
+    });
+    return result;
+  }
 }
 
 const bookMarkService = new BookMarkService();

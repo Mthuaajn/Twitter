@@ -11,9 +11,22 @@ export const createBookMarkController = async (
 ) => {
   const { user_id } = req.decode_authorization as TokenPayload;
   const result = await bookMarkService.createBookMark(user_id, req.body.tweet_id);
-  console.log(result);
   res.json({
     message: BOOKMARK_MESSAGE.BOOKMARK_CREATED,
     result
+  });
+};
+
+export const unBookMarkController = async (
+  req: Request<ParamsDictionary, any, BookMarkTweetReq>,
+  res: Response
+) => {
+  const { user_id } = req.decode_authorization as TokenPayload;
+  const result = await bookMarkService.unBookMark(user_id, req.params.tweetId);
+  if (!result) {
+    return res.json({ message: 'Bookmark not found' });
+  }
+  res.json({
+    message: 'Bookmark deleted successfully'
   });
 };

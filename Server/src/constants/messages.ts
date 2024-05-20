@@ -81,10 +81,13 @@ export const TWEET_MESSAGE = {
 } as const;
 
 export const BOOKMARK_MESSAGE = {
-  BOOKMARK_CREATED: 'Bookmark created successfully'
+  BOOKMARK_CREATED: 'Bookmark created successfully',
+  BOOKMARK_DELETED: 'Bookmark deleted successfully',
+  BOOKMARK_NOT_FOUND: 'Bookmark not found'
 };
 
 export const LIKE_MESSAGE = {
   LIKE_CREATED: 'Like created successfully',
-  LIKE_DELETED: 'Like deleted successfully'
+  LIKE_DELETED: 'Like deleted successfully',
+  LIKE_NOT_FOUND: 'Like not found'
 };

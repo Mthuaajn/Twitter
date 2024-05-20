@@ -22,7 +22,12 @@ export const deleteLikeController = async (
   res: Response
 ) => {
   const { user_id } = req.decode_authorization as TokenPayload;
-  await likeService.unLike(user_id, req.params.tweet_id);
+  const result = await likeService.unLike(user_id, req.params.tweet_id);
+  if (!result) {
+    return res.json({
+      message: LIKE_MESSAGE.LIKE_NOT_FOUND
+    });
+  }
   res.json({
     message: LIKE_MESSAGE.LIKE_DELETED
   });

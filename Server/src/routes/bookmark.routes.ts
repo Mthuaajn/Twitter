@@ -1,4 +1,7 @@
-import { createBookMarkController } from './../controllers/bookMark.controllers';
+import {
+  createBookMarkController,
+  unBookMarkController
+} from './../controllers/bookMark.controllers';
 import { verifyUserValidator } from './../controllers/users.controllers';
 import { accessTokenValidator } from './../middlewares/users.middlewares';
 import { uploadImageController, uploadVideoController } from '~/controllers/medias.controllers';
@@ -13,4 +16,10 @@ bookMarkRouter.post(
   wrapRequestHandler(createBookMarkController)
 );
 
+bookMarkRouter.delete(
+  '/tweets/:tweetId',
+  accessTokenValidator,
+  verifyUserValidator,
+  wrapRequestHandler(unBookMarkController)
+);
 export default bookMarkRouter;
