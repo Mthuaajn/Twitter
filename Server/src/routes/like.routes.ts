@@ -1,4 +1,4 @@
-import { createLikeController } from './../controllers/like.controllers';
+import { createLikeController, deleteLikeController } from './../controllers/like.controllers';
 import { verifyUserValidator } from '~/controllers/users.controllers';
 
 import { Router } from 'express';
@@ -12,4 +12,10 @@ likeRouter.post(
   wrapRequestHandler(createLikeController)
 );
 
+likeRouter.delete(
+  '/tweets/:tweet_id',
+  accessTokenValidator,
+  verifyUserValidator,
+  wrapRequestHandler(deleteLikeController)
+);
 export default likeRouter;

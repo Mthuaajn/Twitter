@@ -85,5 +85,6 @@ export const BOOKMARK_MESSAGE = {
 };
 
 export const LIKE_MESSAGE = {
-  LIKE_CREATED: 'Like created successfully'
+  LIKE_CREATED: 'Like created successfully',
+  LIKE_DELETED: 'Like deleted successfully'
 };

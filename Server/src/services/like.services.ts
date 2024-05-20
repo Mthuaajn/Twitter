@@ -12,7 +12,7 @@ class LikeService {
       },
       {
         $setOnInsert: new Like({
-          user_id: new ObjectId(),
+          user_id: new ObjectId(user_id),
           tweet_id: new ObjectId(tweet_id),
           create_at: new Date()
         })
@@ -22,6 +22,16 @@ class LikeService {
         returnDocument: 'after'
       }
     );
+    return result;
+  }
+
+  async unLike(user_id: string, tweet_id: string) {
+    console.log('user_id', user_id);
+    console.log('tweet_id', tweet_id);
+    const result = await databaseService.like.findOneAndDelete({
+      user_id: new ObjectId(user_id),
+      tweet_id: new ObjectId(tweet_id)
+    });
     return result;
   }
 }
