@@ -1,4 +1,4 @@
-import { MediaType, TweetAudience, TweetType } from './../constants/enums';
+import { MediaType, TweetAudience, TweetType, UserVerifyStatus } from './../constants/enums';
 import { numberEnumToArray } from './../utils/commons';
 import { checkSchema } from 'express-validator';
 import { validate } from './../utils/validation';
@@ -8,6 +8,10 @@ import { isEmpty } from 'lodash';
 import { ErrorWithStatus } from '~/utils/Error';
 import databaseService from '~/services/db.services';
 import HTTP_STATUS from '~/constants/httpStatus';
+import { wrap } from 'module';
+import { wrapRequestHandler } from '~/utils/handlers';
+import { NextFunction, Request, Response } from 'express';
+import Tweet from '~/models/schemas/Tweet.schema';
 
 const TweetTypeValues = numberEnumToArray(TweetType);
 const AudienceValues = numberEnumToArray(TweetAudience);
@@ -111,22 +115,37 @@ export const tweetIdValidator = validate(
     {
       tweet_id: {
         custom: {
-          options: async (value, { req: Request }) => {
+          options: async (value, { req }) => {
             if (!ObjectId.isValid(value)) {
               throw new ErrorWithStatus({
                 message: TWEET_MESSAGE.OBJECT_ID_INVALID,
                 status: HTTP_STATUS.BAD_REQUEST
               });
             }
-            const tweet = await databaseService.tweets.findOne({
-              _id: new ObjectId(value as string)
-            });
+            const [tweet] = await databaseService.tweets
+              .aggregate<Tweet>([
+                {
+                  $match: {
+                    _id: new ObjectId(value as string)
+                  }
+                },
+                {
+                  $lookup: {
+                    from: 'hashtags',
+                    localField: 'hashtags',
+                    foreignField: '_id',
+                    as: 'hashtags'
+                  }
+                }
+              ])
+              .toArray();
             if (!tweet) {
               throw new ErrorWithStatus({
                 message: TWEET_MESSAGE.NOT_FOUND,
                 status: HTTP_STATUS.NOT_FOUND
               });
             }
+            (req as Request).tweet = tweet;
             return true;
           }
         }
@@ -134,4 +153,41 @@ export const tweetIdValidator = validate(
     },
     ['body', 'params']
   )
+);
+
+export const audienceValidator = wrapRequestHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // lấy tweet từ middleware tweetIdValidator
+    const tweet = req.tweet as Tweet;
+    // check xem tweet có audience là TweetCircle không
+    if (tweet.audience === TweetAudience.TwitterCircle) {
+      // kiểm tra người dùng đã đăng nhập chưa
+      if (!req.decode_authorization) {
+        throw new ErrorWithStatus({
+          message: TWEET_MESSAGE.AUTHORIZATION_REQUIRED,
+          status: HTTP_STATUS.UNAUTHORIZED
+        });
+      }
+      // lấy tác giả của tweet
+      const author = await databaseService.users.findOne({ _id: new ObjectId(tweet.user_id) });
+      // kiểm tra xem có tweet có tác giả không và tác giả đó có bị banned không
+      if (!author || author.verify === UserVerifyStatus.Banned) {
+        throw new ErrorWithStatus({
+          message: TWEET_MESSAGE.USER_NOT_VERIFY,
+          status: HTTP_STATUS.UNAUTHORIZED
+        });
+      }
+      // Kiểm tra người xem tweet này có trong Twitter Circle của tác giả hay không
+      const { user_id } = req.decode_authorization;
+      const isInTweetCircle = author.tweet_circle.some((item) => item.equals(user_id));
+      // Nếu bạn không phải tác giả và không có trong tweet Circle thì quăng lỗi
+      if (!isInTweetCircle && !author._id.equals(user_id)) {
+        throw new ErrorWithStatus({
+          message: TWEET_MESSAGE.TWEET_IS_NOT_PUBLIC,
+          status: HTTP_STATUS.FORBIDDEN
+        });
+      }
+    }
+    next();
+  }
 );

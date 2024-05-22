@@ -568,7 +568,7 @@ export const isUserLoggedInValidator = (
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (req.headers.authorization) {
-      middleware(req, res, next);
+      return middleware(req, res, next);
     }
     next();
   };

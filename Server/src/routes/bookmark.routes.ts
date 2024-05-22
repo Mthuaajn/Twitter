@@ -1,4 +1,4 @@
-import { tweetIdValidator } from './../middlewares/tweet.meddilewares';
+import { tweetIdValidator } from './../middlewares/tweet.middlewares';
 import {
   createBookMarkController,
   unBookMarkController

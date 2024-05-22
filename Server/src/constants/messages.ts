@@ -80,7 +80,10 @@ export const TWEET_MESSAGE = {
   CREATED: 'Tweet created successfully',
   NOT_FOUND: 'Tweet not found',
   OBJECT_ID_INVALID: 'Object id is invalid',
-  GET_TWEET_SUCCESS: 'Get tweet success'
+  GET_TWEET_SUCCESS: 'Get tweet success',
+  AUTHORIZATION_REQUIRED: 'Authorization is required',
+  USER_NOT_VERIFY: 'User is not verified',
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public'
 } as const;
 
 export const BOOKMARK_MESSAGE = {
