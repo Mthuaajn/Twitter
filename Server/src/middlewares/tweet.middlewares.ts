@@ -85,7 +85,7 @@ export const createTweetValidator = validate(
       isArray: true,
       custom: {
         options: (value, { req }) => {
-          if (!value.every((item: any) => !ObjectId.isValid(item))) {
+          if (!value.every((item: any) => ObjectId.isValid(item))) {
             throw new Error(TWEET_MESSAGE.MENTIONS_MUST_BE_ARRAY_OBJECT_ID);
           }
           return true;
@@ -135,6 +135,14 @@ export const tweetIdValidator = validate(
                     localField: 'hashtags',
                     foreignField: '_id',
                     as: 'hashtags'
+                  }
+                },
+                {
+                  $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user'
                   }
                 }
               ])
