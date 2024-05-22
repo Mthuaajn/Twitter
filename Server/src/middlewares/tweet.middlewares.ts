@@ -160,6 +160,21 @@ export const tweetIdValidator = validate(
                       }
                     }
                   }
+                },
+                {
+                  $lookup: {
+                    from: 'bookmarks',
+                    localField: '_id',
+                    foreignField: 'tweet_id',
+                    as: 'bookmarks'
+                  }
+                },
+                {
+                  $addFields: {
+                    bookmarks: {
+                      $size: '$bookmarks'
+                    }
+                  }
                 }
               ])
               .toArray();
