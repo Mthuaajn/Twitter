@@ -140,9 +140,25 @@ export const tweetIdValidator = validate(
                 {
                   $lookup: {
                     from: 'users',
-                    localField: 'user_id',
+                    localField: 'mentions',
                     foreignField: '_id',
-                    as: 'user'
+                    as: 'mentions'
+                  }
+                },
+                {
+                  $addFields: {
+                    mentions: {
+                      $map: {
+                        input: '$mentions',
+                        as: 'mention',
+                        in: {
+                          _id: '$$mention._id',
+                          email: '$$mention.email',
+                          username: '$$mention.username',
+                          name: '$$mention.name'
+                        }
+                      }
+                    }
                   }
                 }
               ])
