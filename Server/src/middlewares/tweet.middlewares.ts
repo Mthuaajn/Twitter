@@ -170,9 +170,20 @@ export const tweetIdValidator = validate(
                   }
                 },
                 {
+                  $lookup: {
+                    from: 'likes',
+                    localField: '_id',
+                    foreignField: 'tweet_id',
+                    as: 'likes'
+                  }
+                },
+                {
                   $addFields: {
                     bookmarks: {
                       $size: '$bookmarks'
+                    },
+                    likes: {
+                      $size: '$likes'
                     }
                   }
                 }
