@@ -220,6 +220,9 @@ export const tweetIdValidator = validate(
                           cond: { $eq: ['$$item.type', 3] }
                         }
                       }
+                    },
+                    views: {
+                      $add: ['$guest_views', '$user_views']
                     }
                   }
                 },
