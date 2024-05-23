@@ -222,6 +222,11 @@ export const tweetIdValidator = validate(
                       }
                     }
                   }
+                },
+                {
+                  $project: {
+                    tweet_children: 0
+                  }
                 }
               ])
               .toArray();
