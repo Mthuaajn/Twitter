@@ -199,16 +199,7 @@ export const tweetIdValidator = validate(
                         $filter: {
                           input: '$tweet_children',
                           as: 'item',
-                          cond: { $eq: ['$$item.type', 1] }
-                        }
-                      }
-                    },
-                    quoteTweet_count: {
-                      $size: {
-                        $filter: {
-                          input: '$tweet_children',
-                          as: 'item',
-                          cond: { $eq: ['$$item.type', 2] }
+                          cond: { $eq: ['$$item.type', TweetType.Retweet] }
                         }
                       }
                     },
@@ -217,7 +208,16 @@ export const tweetIdValidator = validate(
                         $filter: {
                           input: '$tweet_children',
                           as: 'item',
-                          cond: { $eq: ['$$item.type', 3] }
+                          cond: { $eq: ['$$item.type', TweetType.Comment] }
+                        }
+                      }
+                    },
+                    quoteTweet_count: {
+                      $size: {
+                        $filter: {
+                          input: '$tweet_children',
+                          as: 'item',
+                          cond: { $eq: ['$$item.type', TweetType.QuoteTweet] }
                         }
                       }
                     },

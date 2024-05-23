@@ -83,7 +83,8 @@ export const TWEET_MESSAGE = {
   GET_TWEET_SUCCESS: 'Get tweet success',
   AUTHORIZATION_REQUIRED: 'Authorization is required',
   USER_NOT_VERIFY: 'User is not verified',
-  TWEET_IS_NOT_PUBLIC: 'Tweet is not public'
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public',
+  TWEET_CHILDREN_SUCCESS: 'Get tweet children success'
 } as const;
 
 export const BOOKMARK_MESSAGE = {
