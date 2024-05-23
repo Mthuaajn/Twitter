@@ -36,8 +36,8 @@ export const createTweetValidator = validate(
         options: (value, { req }) => {
           const type = req.body.type as TweetType;
           if (
-            [TweetType.Retweet, TweetType.Comment, TweetType.QuoteTweet].includes(type) &&
-            ObjectId.isValid(value)
+            ![TweetType.Retweet, TweetType.Comment, TweetType.QuoteTweet].includes(type) &&
+            !ObjectId.isValid(value)
           ) {
             throw new Error(TWEET_MESSAGE.PARENT_ID_MUST_BE_A_VALID_TWEET_ID);
           }
@@ -145,6 +145,7 @@ export const tweetIdValidator = validate(
                     as: 'mentions'
                   }
                 },
+
                 {
                   $addFields: {
                     mentions: {
@@ -159,6 +160,14 @@ export const tweetIdValidator = validate(
                         }
                       }
                     }
+                  }
+                },
+                {
+                  $lookup: {
+                    from: 'tweets',
+                    localField: '_id',
+                    foreignField: 'parent_id',
+                    as: 'tweet_children'
                   }
                 },
                 {
@@ -184,6 +193,33 @@ export const tweetIdValidator = validate(
                     },
                     likes: {
                       $size: '$likes'
+                    },
+                    retweet_count: {
+                      $size: {
+                        $filter: {
+                          input: '$tweet_children',
+                          as: 'item',
+                          cond: { $eq: ['$$item.type', 1] }
+                        }
+                      }
+                    },
+                    quoteTweet_count: {
+                      $size: {
+                        $filter: {
+                          input: '$tweet_children',
+                          as: 'item',
+                          cond: { $eq: ['$$item.type', 2] }
+                        }
+                      }
+                    },
+                    commentTweet_count: {
+                      $size: {
+                        $filter: {
+                          input: '$tweet_children',
+                          as: 'item',
+                          cond: { $eq: ['$$item.type', 3] }
+                        }
+                      }
                     }
                   }
                 }
