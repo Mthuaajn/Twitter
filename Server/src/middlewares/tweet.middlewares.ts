@@ -285,3 +285,41 @@ export const audienceValidator = wrapRequestHandler(
     next();
   }
 );
+
+export const tweetQueryValidator = validate(
+  checkSchema(
+    {
+      page: {
+        isNumeric: true,
+        custom: {
+          options: (value, { req }) => {
+            const num = Number(value);
+            if (num < 1) {
+              throw new Error('Page > 1');
+            }
+            return true;
+          }
+        }
+      },
+      limit: {
+        isNumeric: true,
+        custom: {
+          options: (value, { req }) => {
+            const num = Number(value);
+            if (num > 100 || num < 1) {
+              throw new Error('limit must be between 1 and 100');
+            }
+            return true;
+          }
+        }
+      },
+      type: {
+        isIn: {
+          options: [TweetType]
+        },
+        errorMessage: TWEET_MESSAGE.INVALID_TYPE
+      }
+    },
+    ['query']
+  )
+);

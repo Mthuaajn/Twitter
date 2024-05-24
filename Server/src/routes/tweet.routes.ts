@@ -3,7 +3,8 @@ import { isUserLoggedInValidator } from './../middlewares/users.middlewares';
 import {
   createTweetValidator,
   tweetIdValidator,
-  audienceValidator
+  audienceValidator,
+  tweetQueryValidator
 } from './../middlewares/tweet.middlewares';
 import { createTweetController, getTweetController } from '../controllers/tweet.controllers';
 import { accessTokenValidator } from '~/middlewares/users.middlewares';
@@ -33,6 +34,7 @@ tweetRouter.get(
 tweetRouter.get(
   '/:tweet_id/children',
   tweetIdValidator,
+  tweetQueryValidator,
   isUserLoggedInValidator(accessTokenValidator),
   isUserLoggedInValidator(verifyUserValidator),
   audienceValidator,
