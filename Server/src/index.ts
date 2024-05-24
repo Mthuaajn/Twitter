@@ -11,6 +11,7 @@ import staticRouter from './routes/static.routes';
 import tweetRouter from './routes/tweet.routes';
 import bookMarkRouter from './routes/bookmark.routes';
 import likeRouter from './routes/like.routes';
+// import '~/utils/fake';
 config();
 export class App {
   private port: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
