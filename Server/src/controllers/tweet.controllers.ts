@@ -71,7 +71,7 @@ export const getTweetChildrenController = async (
 };
 
 export const getNewFeedTweetController = async (
-  req: Request<TweetParams, any, any, Pagination>,
+  req: Request<ParamsDictionary, any, any, Pagination>,
   res: Response
 ) => {
   const page = Number(req.query.page);
