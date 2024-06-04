@@ -286,7 +286,21 @@ export const audienceValidator = wrapRequestHandler(
   }
 );
 
-export const tweetQueryValidator = validate(
+export const tweetChildrenValidator = validate(
+  checkSchema(
+    {
+      type: {
+        isIn: {
+          options: [TweetType]
+        },
+        errorMessage: TWEET_MESSAGE.INVALID_TYPE
+      }
+    },
+    ['query']
+  )
+);
+
+export const paginationValidator = validate(
   checkSchema(
     {
       page: {
@@ -312,12 +326,6 @@ export const tweetQueryValidator = validate(
             return true;
           }
         }
-      },
-      type: {
-        isIn: {
-          options: [TweetType]
-        },
-        errorMessage: TWEET_MESSAGE.INVALID_TYPE
       }
     },
     ['query']
