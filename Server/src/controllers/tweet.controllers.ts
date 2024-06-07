@@ -5,7 +5,7 @@ import {
   TweetParams,
   TweetQuery,
   TweetRequestBody
-} from '~/models/requests/Tweet.requrest';
+} from '~/models/requests/Tweet.request';
 import { TokenPayload } from '~/models/requests/User.request';
 import tweetService from '~/services/tweet.services';
 import { TWEET_MESSAGE } from '~/constants/messages';

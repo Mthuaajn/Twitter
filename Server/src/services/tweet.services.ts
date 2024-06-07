@@ -1,7 +1,7 @@
 import { TweetType } from './../constants/enums';
 import { HashTag } from './../models/schemas/HashTag.schema';
 import Tweet from '~/models/schemas/Tweet.schema';
-import { TweetRequestBody } from './../models/requests/Tweet.requrest';
+import { TweetRequestBody } from '../models/requests/Tweet.request';
 import {
   MongoClient,
   ServerApiVersion,

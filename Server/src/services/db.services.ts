@@ -42,6 +42,7 @@ class DatabaseService {
     await this.getUserIndex();
     await this.getFollowersIndex();
     await this.getRefreshTokenIndex();
+    await this.getTweetsSearchIndex();
   }
   public async getUserIndex() {
     const exists = await this.users.indexExists(['email_1', 'email_1_password_1', 'username_1']);
@@ -49,6 +50,12 @@ class DatabaseService {
       this.users.createIndex({ email: 1 }, { unique: true });
       this.users.createIndex({ username: 1 }, { unique: true });
       this.users.createIndex({ email: 1, password: 1 });
+    }
+  }
+  public async getTweetsSearchIndex() {
+    const exists = await this.tweets.indexExists(['content_text']);
+    if (!exists) {
+      this.tweets.createIndex({ content: 'text' });
     }
   }
   public async getFollowersIndex() {

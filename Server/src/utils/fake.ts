@@ -7,7 +7,7 @@ import Follower from '~/models/schemas/Follower.schema';
 import Tweet from '~/models/schemas/Tweet.schema';
 import User from '~/models/schemas/User.schema';
 import { hashPassword } from '~/utils/crypto';
-import { TweetRequestBody } from '~/models/requests/Tweet.requrest';
+import { TweetRequestBody } from '~/models/requests/Tweet.request';
 import databaseService from '~/services/db.services';
 
 /**

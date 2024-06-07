@@ -24,3 +24,7 @@ export interface Pagination {
   page: string;
   limit: string;
 }
+
+export interface SearchQuery extends Query, Pagination {
+  content: string;
+}

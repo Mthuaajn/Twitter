@@ -11,6 +11,7 @@ import staticRouter from './routes/static.routes';
 import tweetRouter from './routes/tweet.routes';
 import bookMarkRouter from './routes/bookmark.routes';
 import likeRouter from './routes/like.routes';
+import searchRouter from './routes/search.routes';
 // import '~/utils/fake';
 config();
 export class App {
@@ -22,6 +23,7 @@ export class App {
   private tweetRouter = tweetRouter;
   private bookMarkRouter = bookMarkRouter;
   private likeRouter = likeRouter;
+  private searchRouter = searchRouter;
   constructor() {
     this.app = express();
     this.setup();
@@ -35,6 +37,7 @@ export class App {
     this.app.use('/api/v1/static', this.staticRouter);
     this.app.use('/api/v1/tweets', this.tweetRouter);
     this.app.use('/api/v1/bookmarks', this.bookMarkRouter);
+    this.app.use('/api/v1/search', this.searchRouter);
     this.app.use('/api/v1/likes', this.likeRouter);
     this.app.use('*', defaultErrorHandlers);
   }
