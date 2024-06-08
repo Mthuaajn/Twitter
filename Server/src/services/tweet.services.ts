@@ -486,7 +486,7 @@ class TweetService {
     const date = new Date();
     await databaseService.tweets.updateMany(
       {
-        user_id: {
+        _id: {
           $in: tweet_ids
         }
       },
@@ -501,7 +501,7 @@ class TweetService {
     );
     tweets.forEach((tweet) => {
       tweet.user_views += 1;
-      tweet.update_at = date;
+      tweet.updated_at = date;
     });
     return { tweets, totalDocument: total[0].total };
   }

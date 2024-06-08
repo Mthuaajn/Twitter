@@ -1,5 +1,5 @@
 import { ParamsDictionary, Query } from 'express-serve-static-core';
-import { TweetAudience, TweetType } from '~/constants/enums';
+import { MediaType, MediaTypeQuery, TweetAudience, TweetType } from '~/constants/enums';
 import { Media } from '../Order';
 
 export interface TweetRequestBody {
@@ -27,4 +27,5 @@ export interface Pagination {
 
 export interface SearchQuery extends Query, Pagination {
   content: string;
+  media_type: MediaTypeQuery;
 }
