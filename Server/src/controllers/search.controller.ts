@@ -16,7 +16,8 @@ export const getSearchController = async (
     limit,
     content,
     user_id: req.decode_authorization?.user_id as string,
-    media_type: req.query?.media_type
+    media_type: req.query?.media_type,
+    people_follow: req.query?.people_follow,
   });
   res.status(200).json({
     message: 'search successful',

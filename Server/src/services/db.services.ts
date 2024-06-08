@@ -55,7 +55,7 @@ class DatabaseService {
   public async getTweetsSearchIndex() {
     const exists = await this.tweets.indexExists(['content_text']);
     if (!exists) {
-      this.tweets.createIndex({ content: 'text' });
+      this.tweets.createIndex({ content: 'text' }, { default_language: 'none' });
     }
   }
   public async getFollowersIndex() {

@@ -1,6 +1,7 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 import databaseService from './db.services';
 import { MediaType, MediaTypeQuery, TweetType } from '~/constants/enums';
+import { HashTag } from '~/models/schemas/HashTag.schema';
 
 class SearchService {
   async search({
@@ -8,13 +9,15 @@ class SearchService {
     limit,
     content,
     user_id,
-    media_type
+    media_type,
+    people_follow,
   }: {
     page: number;
     limit: number;
     content: string;
     user_id: string;
     media_type: string;
+    people_follow: string;
   }) {
     const $match: any = {
       $text: {
@@ -28,6 +31,26 @@ class SearchService {
       if (media_type === MediaTypeQuery.Video) {
         $match['medias.type'] = MediaType.Video;
       }
+    }
+    if (people_follow) {
+      const people_follow_ids = await databaseService.follower
+        .find(
+          {
+            user_id: new ObjectId(people_follow)
+          },
+          {
+            projection: {
+              _id: 0,
+              followed_user_id: 1
+            }
+          }
+        )
+        .toArray();
+      const ids = people_follow_ids.map((el) => el.followed_user_id);
+      ids.push(new ObjectId(people_follow));
+      $match['user_id'] = {
+        $in: ids
+      };
     }
     const [tweets, total] = await Promise.all([
       await databaseService.tweets
@@ -46,14 +69,6 @@ class SearchService {
           {
             $unwind: {
               path: '$user'
-            }
-          },
-          {
-            $lookup: {
-              from: 'hashtags',
-              localField: 'hashtags',
-              foreignField: '_id',
-              as: 'hashtags'
             }
           },
           {
@@ -81,6 +96,14 @@ class SearchService {
               localField: 'mentions',
               foreignField: '_id',
               as: 'mentions'
+            }
+          },
+          {
+            $lookup: {
+              from: 'hashtags',
+              localField: 'hashtags',
+              foreignField: '_id',
+              as: 'hashtags'
             }
           },
           {

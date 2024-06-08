@@ -28,4 +28,5 @@ export interface Pagination {
 export interface SearchQuery extends Query, Pagination {
   content: string;
   media_type: MediaTypeQuery;
+  people_follow: string;
 }
