@@ -1,6 +1,6 @@
 import { ObjectId, WithId } from 'mongodb';
 import databaseService from './db.services';
-import { MediaType, MediaTypeQuery, TweetType } from '~/constants/enums';
+import { MediaType, MediaTypeQuery, PeopleFollow, TweetType } from '~/constants/enums';
 import { HashTag } from '~/models/schemas/HashTag.schema';
 
 class SearchService {
@@ -17,7 +17,7 @@ class SearchService {
     content: string;
     user_id: string;
     media_type: string;
-    people_follow: string;
+    people_follow: PeopleFollow;
   }) {
     const $match: any = {
       $text: {
@@ -32,7 +32,7 @@ class SearchService {
         $match['medias.type'] = MediaType.Video;
       }
     }
-    if (people_follow || people_follow === '1') {
+    if (people_follow || people_follow === PeopleFollow.Anyone) {
       const people_follow_ids = await databaseService.follower
         .find(
           {

@@ -32,3 +32,8 @@ export enum MediaTypeQuery {
   Image = 'image',
   Video = 'video'
 }
+
+export enum PeopleFollow {
+  Anyone = '1',
+  Following = '0'
+}
