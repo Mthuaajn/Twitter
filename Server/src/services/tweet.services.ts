@@ -503,7 +503,7 @@ class TweetService {
       tweet.user_views += 1;
       tweet.updated_at = date;
     });
-    return { tweets, totalDocument: total[0].total };
+    return { tweets, totalDocument: total[0]?.total || 0 };
   }
 }
 

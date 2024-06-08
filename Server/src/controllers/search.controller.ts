@@ -10,14 +10,14 @@ export const getSearchController = async (
 ) => {
   const page = Number(req.query.page);
   const limit = Number(req.query.limit);
-  const content = req.query.content as string;
+  const content = encodeURIComponent(req.query.content as string); // thuc hien encode content thanh ' ' -> %20
   const result = await searchService.search({
     page,
     limit,
     content,
     user_id: req.decode_authorization?.user_id as string,
     media_type: req.query?.media_type,
-    people_follow: req.query?.people_follow,
+    people_follow: req.query?.people_follow
   });
   res.status(200).json({
     message: 'search successful',

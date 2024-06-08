@@ -10,7 +10,7 @@ class SearchService {
     content,
     user_id,
     media_type,
-    people_follow,
+    people_follow
   }: {
     page: number;
     limit: number;
@@ -32,11 +32,11 @@ class SearchService {
         $match['medias.type'] = MediaType.Video;
       }
     }
-    if (people_follow) {
+    if (people_follow || people_follow === '1') {
       const people_follow_ids = await databaseService.follower
         .find(
           {
-            user_id: new ObjectId(people_follow)
+            user_id: new ObjectId(user_id)
           },
           {
             projection: {
@@ -47,7 +47,7 @@ class SearchService {
         )
         .toArray();
       const ids = people_follow_ids.map((el) => el.followed_user_id);
-      ids.push(new ObjectId(people_follow));
+      ids.push(new ObjectId(user_id));
       $match['user_id'] = {
         $in: ids
       };
