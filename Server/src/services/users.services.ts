@@ -15,7 +15,7 @@ import { USERS_MESSAGE } from '~/constants/messages';
 import HTTP_STATUS from '~/constants/httpStatus';
 import Follower from '~/models/schemas/Follower.schema';
 import { access } from 'fs';
-import { sendVerifyEmail } from '~/utils/email';
+import { sendForgotPasswordEmail, sendVerifyRegisterEmail } from '~/utils/email';
 
 dotenv.config();
 
@@ -124,16 +124,8 @@ class UserService {
         iat: iat
       })
     );
-    // console.log('email_verify_token', email_verify_token);
     // thuc hien gui email
-    await sendVerifyEmail(
-      payload.email,
-      'Verify Email',
-      `
-    <h1>Verify your email</h1>
-    <p>Click <a href="${process.env.CLIENT_URL}/verify-email?token=${email_verify_token}">here</a> to verify your email</p>
-    `
-    );
+    await sendVerifyRegisterEmail(payload.email, email_verify_token);
     return {
       data: {
         result,
@@ -323,12 +315,12 @@ class UserService {
       refresh_token
     };
   }
-  async resend_email_verify(user_id: string) {
+  async resend_email_verify(user_id: string, email: string) {
     const email_verify_token = await this.signEmailVerifyToken({
       user_id,
       verify: UserVerifyStatus.Unverified
     });
-    console.log('email_verify_token', email_verify_token);
+
     await databaseService.users.updateOne(
       {
         _id: new ObjectId(user_id)
@@ -342,16 +334,25 @@ class UserService {
         }
       }
     );
-    // Gỉa bộ gửi email
-    console.log('Resend verify email: ', email_verify_token);
+    // thuc hien gui email thong qua sever ses
+    await sendVerifyRegisterEmail(email, email_verify_token);
     return { message: USERS_MESSAGE.EMAIL_RESEND_SUCCESS };
   }
-  async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+  async forgotPassword({
+    user_id,
+    verify,
+    email
+  }: {
+    user_id: string;
+    verify: UserVerifyStatus;
+    email: string;
+  }) {
     const forgot_password_token = await this.signForgotPasswordToken({
       user_id,
       verify
     });
-    console.log('forgot_password_token', forgot_password_token);
+    // thuc hien gui email thong qua aws ses
+    await sendForgotPasswordEmail(email, forgot_password_token);
     await databaseService.users.updateOne(
       {
         _id: new ObjectId(user_id)

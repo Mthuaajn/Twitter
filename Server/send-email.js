@@ -61,9 +61,3 @@ const sendVerifyEmail = async (toAddress, subject, body) => {
     return e;
   }
 };
-
-sendVerifyEmail(
-  'nhism1302@gmail.com',
-  'Tiêu đề email',
-  '<h1>Chào mừng bạn đã đến với bình nguyên vô tận </h1>'
-);
