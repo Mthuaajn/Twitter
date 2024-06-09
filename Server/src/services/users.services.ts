@@ -1,3 +1,4 @@
+import { SendEmailCommand } from '@aws-sdk/client-ses';
 import { verifyToken } from './../utils/jwt';
 import { ObjectId } from 'mongodb';
 import { tokenType, UserVerifyStatus } from './../constants/enums';
@@ -14,6 +15,7 @@ import { USERS_MESSAGE } from '~/constants/messages';
 import HTTP_STATUS from '~/constants/httpStatus';
 import Follower from '~/models/schemas/Follower.schema';
 import { access } from 'fs';
+import { sendVerifyEmail } from '~/utils/email';
 
 dotenv.config();
 
@@ -107,7 +109,7 @@ class UserService {
         password: hashPassword(payload.password)
       })
     );
-    console.log('email_verify_token', email_verify_token);
+
     // const user_id = result.insertedId.toString();
     const [accessToken, refreshToken] = await this.createRefreshTokenAndAccessToken({
       user_id: user_id.toString(),
@@ -121,6 +123,16 @@ class UserService {
         exp: exp,
         iat: iat
       })
+    );
+    // console.log('email_verify_token', email_verify_token);
+    // thuc hien gui email
+    await sendVerifyEmail(
+      payload.email,
+      'Verify Email',
+      `
+    <h1>Verify your email</h1>
+    <p>Click <a href="${process.env.CLIENT_URL}/verify-email?token=${email_verify_token}">here</a> to verify your email</p>
+    `
     );
     return {
       data: {
