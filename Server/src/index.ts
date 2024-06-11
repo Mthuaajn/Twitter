@@ -12,6 +12,8 @@ import tweetRouter from './routes/tweet.routes';
 import bookMarkRouter from './routes/bookmark.routes';
 import likeRouter from './routes/like.routes';
 import searchRouter from './routes/search.routes';
+import morgan from 'morgan';
+import cors from 'cors';
 // import '~/utils/fake';
 config();
 export class App {
@@ -30,7 +32,13 @@ export class App {
   }
   private setup(): void {
     initFileUpload();
+    this.app.use(morgan('dev'));
     this.app.use(express.json());
+    this.app.use(
+      cors({
+        origin: 'http://localhost:3000'
+      })
+    );
     this.app.use('/medias', express.static(UPLOAD_VIDEO_DIR));
     this.app.use('/api/v1/users', this.userRouter);
     this.app.use('/api/v1/media', this.mediaRouter);
