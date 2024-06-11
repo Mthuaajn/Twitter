@@ -14,6 +14,7 @@ import likeRouter from './routes/like.routes';
 import searchRouter from './routes/search.routes';
 import morgan from 'morgan';
 import cors from 'cors';
+import '~/utils/S3';
 // import '~/utils/fake';
 config();
 export class App {
