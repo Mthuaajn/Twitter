@@ -31,6 +31,11 @@ export class App {
   private searchRouter = searchRouter;
   private httpServer: any;
   private io: any;
+  private users: {
+    [key: string]: {
+      socket_id: string;
+    };
+  } = {};
   constructor() {
     this.app = express();
     this.httpServer = createServer(this.app);
@@ -45,16 +50,14 @@ export class App {
     this.io.on('connection', (socket: Socket) => {
       console.log(`User connected with id ${socket.id}`);
       // nhan biet client co tat connect khong
+      const user_id = socket.handshake.auth._id as string;
+      this.users[user_id] = {
+        socket_id: socket.id
+      };
+      console.log(this.users);
       socket.on('disconnect', () => {
+        delete this.users[user_id];
         console.log(`User disconnected with id ${socket.id}`);
-      });
-
-      socket.on('chat message', (arg) => {
-        // arg la value cua emit ben client
-        console.log(arg);
-      });
-      socket.emit('hi', {
-        message: `Xin chao ${socket.id} da ket noi thanh cong `
       });
     });
   }
