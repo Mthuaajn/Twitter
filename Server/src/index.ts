@@ -15,6 +15,8 @@ import searchRouter from './routes/search.routes';
 import morgan from 'morgan';
 import cors from 'cors';
 import '~/utils/S3';
+import { createServer } from 'http';
+import { Server, Socket } from 'socket.io';
 // import '~/utils/fake';
 config();
 export class App {
@@ -27,13 +29,30 @@ export class App {
   private bookMarkRouter = bookMarkRouter;
   private likeRouter = likeRouter;
   private searchRouter = searchRouter;
+  private httpServer: any;
+  private io: any;
   constructor() {
     this.app = express();
+    this.httpServer = createServer(this.app);
+    this.io = new Server(this.httpServer, {
+      cors: {
+        origin: 'http://localhost:3000'
+      }
+    });
     this.setup();
+  }
+  private setupSocket(): void {
+    this.io.on('connection', (socket: Socket) => {
+      console.log(`User connected with id ${socket.id}`);
+      // nhan biet client co tat connect khong
+      socket.on('disconnect', () => {
+        console.log(`User disconnected with id ${socket.id}`);
+      });
+    });
   }
   private setup(): void {
     initFileUpload();
-    this.app.use(morgan('dev'));
+    // this.app.use(morgan('dev'));
     this.app.use(express.json());
     this.app.use(
       cors({
@@ -49,13 +68,14 @@ export class App {
     this.app.use('/api/v1/search', this.searchRouter);
     this.app.use('/api/v1/likes', this.likeRouter);
     this.app.use('*', defaultErrorHandlers);
+    this.setupSocket();
   }
   public async start(): Promise<void> {
     try {
       await DatabaseService.run().then(() => {
         DatabaseService.getIndex();
       });
-      this.app.listen(this.port, () => {
+      this.httpServer.listen(this.port, () => {
         console.log(`app running on port ${this.port}`);
       });
     } catch (err) {
