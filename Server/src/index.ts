@@ -48,6 +48,14 @@ export class App {
       socket.on('disconnect', () => {
         console.log(`User disconnected with id ${socket.id}`);
       });
+
+      socket.on('chat message', (arg) => {
+        // arg la value cua emit ben client
+        console.log(arg);
+      });
+      socket.emit('hi', {
+        message: `Xin chao ${socket.id} da ket noi thanh cong `
+      });
     });
   }
   private setup(): void {

@@ -6,6 +6,10 @@ export default function Chat() {
     const socket = io("http://localhost:4000");
     socket.on("connect", () => {
       console.log(socket.id);
+      socket.emit("chat message", "hello world ");
+      socket.on("hi", (data) => {
+        alert(data.message);
+      });
     });
     socket.on("disconnect", () => {
       console.log(socket.id);
