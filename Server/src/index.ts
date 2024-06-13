@@ -55,9 +55,20 @@ export class App {
         socket_id: socket.id
       };
       console.log(this.users);
+
+      socket.on('private message', (data) => {
+        const receiver_socket_id = this.users[data.to]?.socket_id;
+        if (!receiver_socket_id) return;
+        socket.to(receiver_socket_id).emit('receive private message', {
+          content: data.content,
+          from: user_id
+        });
+      });
+
       socket.on('disconnect', () => {
         delete this.users[user_id];
         console.log(`User disconnected with id ${socket.id}`);
+        console.log(this.users);
       });
     });
   }
