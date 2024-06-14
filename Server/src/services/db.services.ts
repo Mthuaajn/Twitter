@@ -7,6 +7,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Follower from '~/models/schemas/Follower.schema';
 import Tweet from '~/models/schemas/Tweet.schema';
 import { Like } from '~/models/schemas/Like.schema';
+import Conversation from '~/models/schemas/Conversation.chemas';
 dotenv.config();
 
 class DatabaseService {
@@ -91,6 +92,9 @@ class DatabaseService {
   }
   public get like(): Collection<Like> {
     return this.db.collection(process.env.DB_LIKE_COLLECTION as string);
+  }
+  public get conversation(): Collection<Conversation> {
+    return this.db.collection(process.env.DB_CONVERSATION_COLLECTION as string);
   }
 }
 

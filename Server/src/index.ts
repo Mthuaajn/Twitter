@@ -17,6 +17,8 @@ import cors from 'cors';
 import '~/utils/S3';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import databaseService from '~/services/db.services';
+import Conversation from './models/schemas/Conversation.chemas';
 // import '~/utils/fake';
 config();
 export class App {
@@ -56,13 +58,21 @@ export class App {
       };
       console.log(this.users);
 
-      socket.on('private message', (data) => {
+      socket.on('private message', async (data) => {
         const receiver_socket_id = this.users[data.to]?.socket_id;
         if (!receiver_socket_id) return;
         socket.to(receiver_socket_id).emit('receive private message', {
           content: data.content,
           from: user_id
         });
+
+        await databaseService.conversation.insertOne(
+          new Conversation({
+            sender_id: data.to,
+            receiver_id: data.from,
+            content: data.content
+          })
+        );
       });
 
       socket.on('disconnect', () => {

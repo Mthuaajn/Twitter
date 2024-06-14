@@ -7,7 +7,7 @@ const usernames = [
   {
     name: "user1",
     value: "user6665816356a86292e6ed4bd4",
-  },  
+  },
   {
     name: "user2",
     value: "user6666618dd170d973c50a7bb7",
@@ -59,6 +59,7 @@ export default function Chat() {
     socket.emit("private message", {
       content: value,
       to: receiver,
+      from: profile._id,
     });
     setMessages((messages) => [
       ...messages,
