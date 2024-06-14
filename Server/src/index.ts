@@ -12,6 +12,7 @@ import tweetRouter from './routes/tweet.routes';
 import bookMarkRouter from './routes/bookmark.routes';
 import likeRouter from './routes/like.routes';
 import searchRouter from './routes/search.routes';
+import conversationRouter from '~/routes/conversation.routes';
 import morgan from 'morgan';
 import cors from 'cors';
 import '~/utils/S3';
@@ -32,6 +33,7 @@ export class App {
   private bookMarkRouter = bookMarkRouter;
   private likeRouter = likeRouter;
   private searchRouter = searchRouter;
+  private conversationRouter = conversationRouter;
   private httpServer: any;
   private io: any;
   private users: {
@@ -100,6 +102,7 @@ export class App {
     this.app.use('/api/v1/bookmarks', this.bookMarkRouter);
     this.app.use('/api/v1/search', this.searchRouter);
     this.app.use('/api/v1/likes', this.likeRouter);
+    this.app.use('/api/v1/conversations', this.conversationRouter);
     this.app.use('*', defaultErrorHandlers);
     this.setupSocket();
   }
