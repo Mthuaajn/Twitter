@@ -19,6 +19,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import databaseService from '~/services/db.services';
 import Conversation from './models/schemas/Conversation.chemas';
+import { ObjectId } from 'mongodb';
 // import '~/utils/fake';
 config();
 export class App {
@@ -68,8 +69,8 @@ export class App {
 
         await databaseService.conversation.insertOne(
           new Conversation({
-            sender_id: data.to,
-            receiver_id: data.from,
+            sender_id: new ObjectId(data.to),
+            receiver_id: new ObjectId(data.from),
             content: data.content
           })
         );
