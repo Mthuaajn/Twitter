@@ -61,21 +61,20 @@ export class App {
       };
       console.log(this.users);
 
-      socket.on('private message', async (data) => {
-        const receiver_socket_id = this.users[data.to]?.socket_id;
+      socket.on('send_message', async (data) => {
+        const { receiver_id, sender_id, content } = data.payload;
+        const receiver_socket_id = this.users[receiver_id]?.socket_id;
         if (!receiver_socket_id) return;
-        socket.to(receiver_socket_id).emit('receive private message', {
-          content: data.content,
-          from: user_id
+        const conversation = new Conversation({
+          sender_id: new ObjectId(sender_id),
+          receiver_id: new ObjectId(receiver_id),
+          content: content
         });
-
-        await databaseService.conversation.insertOne(
-          new Conversation({
-            sender_id: new ObjectId(data.to),
-            receiver_id: new ObjectId(data.from),
-            content: data.content
-          })
-        );
+        const result = await databaseService.conversation.insertOne(conversation);
+        conversation._id = result.insertedId;
+        socket.to(receiver_socket_id).emit('receive_message', {
+          payload: conversation
+        });
       });
 
       socket.on('disconnect', () => {

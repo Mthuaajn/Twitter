@@ -16,7 +16,7 @@ const usernames = [
 
 export default function Chat() {
   const [value, setValue] = useState("");
-  const [message, setMessages] = useState([]);
+  const [conversations, setConversations] = useState([]);
   const [receiver, setReceiver] = useState([]);
   const getProfile = (username) => {
     axios
@@ -37,15 +37,9 @@ export default function Chat() {
     socket.on("disconnect", () => {
       console.log(socket.id);
     });
-    socket.on("receive private message", (data) => {
-      const content = data.content;
-      setMessages((messages) => [
-        ...messages,
-        {
-          content,
-          isSender: false,
-        },
-      ]);
+    socket.on("receive_message", (data) => {
+      const { payload } = data;
+      setConversations((conversations) => [...conversations, payload]);
     });
 
     return () => {
@@ -53,19 +47,38 @@ export default function Chat() {
     };
   }, []);
 
+  useEffect(() => {
+    if (receiver) {
+      axios
+        .get(`/conversations/${receiver}`, {
+          baseURL: import.meta.env.VITE_API_URL,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          params: { page: 1, limit: 10 },
+        })
+        .then((res) => {
+           setConversations(res.data.conversations);
+        });
+    }
+  }, [receiver]);
+
   const send = (e) => {
     e.preventDefault();
     setValue("");
-    socket.emit("private message", {
+    const conversation = {
       content: value,
-      to: receiver,
-      from: profile._id,
+      sender_id: profile._id,
+      receiver_id: receiver,
+    };
+    socket.emit("send_message", {
+      payload: conversation,
     });
-    setMessages((messages) => [
-      ...messages,
+    setConversations((conversations) => [
+      ...conversations,
       {
-        content: value,
-        isSender: true,
+        ...conversation,
+        _id: new Date().getTime(),
       },
     ]);
   };
@@ -80,11 +93,14 @@ export default function Chat() {
         ))}
       </div>
       <div className="chat">
-        {message.map((msg, index) => (
-          <div key={index}>
+        {conversations.map((conversation) => (
+          <div key={conversations._id}>
             <div className="message-container">
-              <div className={"message " + (msg.isSender ? "message-right" : "")}>
-                {msg.content}
+              <div
+                className={
+                  "message " + (conversation.sender_id === profile._id ? "message-right" : "")
+                }>
+                {conversation.content}
               </div>
             </div>
           </div>
