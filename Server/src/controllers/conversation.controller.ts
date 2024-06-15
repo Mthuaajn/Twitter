@@ -1,9 +1,10 @@
 import { ParamsDictionary } from 'express-serve-static-core';
 import { Request, Response } from 'express';
 import conversationService from '~/services/conversations.services';
+import { GetConversationRequest } from '~/models/requests/Conversation.request';
 
 export const getConversationController = async (
-  req: Request<ParamsDictionary, any, any>,
+  req: Request<GetConversationRequest>,
   res: Response
 ) => {
   const { receiver_id } = req.params;
