@@ -13,6 +13,7 @@ import { TokenPayload } from '~/models/requests/User.request';
 import { ObjectId } from 'mongodb';
 import { UserVerifyStatus } from '~/constants/enums';
 import { REGEX_USERNAME } from '~/constants/regex';
+import { verifyAccessToken } from '~/utils/commons';
 
 const password: ParamSchema = {
   notEmpty: {
@@ -267,27 +268,7 @@ export const accessTokenValidator = validate(
               });
             }
             const access_token = (value || '').split(' ')[1];
-            if (!access_token) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGE.ACCESS_TOKEN_REQUIRED,
-                status: 401
-              });
-            }
-            try {
-              const decoded_authorization = await verifyToken({
-                token: access_token,
-                secretOrPublicKey: process.env.JWT_ACCESS_TOKEN_SECRET as string
-              });
-              (req as Request).decode_authorization = decoded_authorization;
-            } catch (err) {
-              if (err instanceof JsonWebTokenError) {
-                throw new ErrorWithStatus({
-                  message: USERS_MESSAGE.ACCESS_TOKEN_INVALID,
-                  status: 401
-                });
-              }
-            }
-            return true;
+            return await verifyAccessToken(access_token, req as Request);
           }
         }
       }

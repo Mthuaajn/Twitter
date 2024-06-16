@@ -6,7 +6,6 @@ import userRouter from '~/routes/users.routes';
 import mediaRouter from '~/routes/medias.routes';
 import { initFileUpload } from '~/utils/file';
 import { config } from 'dotenv';
-import { UPLOAD_IMAGE_DIR } from './constants/dir';
 import staticRouter from './routes/static.routes';
 import tweetRouter from './routes/tweet.routes';
 import bookMarkRouter from './routes/bookmark.routes';
@@ -16,11 +15,9 @@ import conversationRouter from '~/routes/conversation.routes';
 import morgan from 'morgan';
 import cors from 'cors';
 import '~/utils/S3';
-import { createServer } from 'http';
-import { Server, Socket } from 'socket.io';
-import databaseService from '~/services/db.services';
-import Conversation from './models/schemas/Conversation.chemas';
-import { ObjectId } from 'mongodb';
+import { createServer, Server as HTTPServer } from 'http';
+import { Server } from 'socket.io';
+import SocketService from './services/socket.services';
 // import '~/utils/fake';
 config();
 export class App {
@@ -34,13 +31,9 @@ export class App {
   private likeRouter = likeRouter;
   private searchRouter = searchRouter;
   private conversationRouter = conversationRouter;
-  private httpServer: any;
-  private io: any;
-  private users: {
-    [key: string]: {
-      socket_id: string;
-    };
-  } = {};
+  private httpServer: HTTPServer;
+  private io: Server;
+  private socketService: SocketService;
   constructor() {
     this.app = express();
     this.httpServer = createServer(this.app);
@@ -49,40 +42,8 @@ export class App {
         origin: 'http://localhost:3000'
       }
     });
+    this.socketService = new SocketService(this.io); // khởi tạo socketService
     this.setup();
-  }
-  private setupSocket(): void {
-    this.io.on('connection', (socket: Socket) => {
-      console.log(`User connected with id ${socket.id}`);
-      // nhan biet client co tat connect khong
-      const user_id = socket.handshake.auth._id as string;
-      this.users[user_id] = {
-        socket_id: socket.id
-      };
-      console.log(this.users);
-
-      socket.on('send_message', async (data) => {
-        const { receiver_id, sender_id, content } = data.payload;
-        const receiver_socket_id = this.users[receiver_id]?.socket_id;
-        if (!receiver_socket_id) return;
-        const conversation = new Conversation({
-          sender_id: new ObjectId(sender_id),
-          receiver_id: new ObjectId(receiver_id),
-          content: content
-        });
-        const result = await databaseService.conversation.insertOne(conversation);
-        conversation._id = result.insertedId;
-        socket.to(receiver_socket_id).emit('receive_message', {
-          payload: conversation
-        });
-      });
-
-      socket.on('disconnect', () => {
-        delete this.users[user_id];
-        console.log(`User disconnected with id ${socket.id}`);
-        console.log(this.users);
-      });
-    });
   }
   private setup(): void {
     initFileUpload();
@@ -103,7 +64,6 @@ export class App {
     this.app.use('/api/v1/likes', this.likeRouter);
     this.app.use('/api/v1/conversations', this.conversationRouter);
     this.app.use('*', defaultErrorHandlers);
-    this.setupSocket();
   }
   public async start(): Promise<void> {
     try {
