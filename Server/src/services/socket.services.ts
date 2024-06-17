@@ -63,7 +63,7 @@ class SocketService {
         const result = await databaseService.conversation.insertOne(conversation);
         conversation._id = result.insertedId;
         if (receiver_socket_id) {
-          socket.to(receiver_socket_id).emit('receive_message', {
+          this.io.to(receiver_socket_id).emit('receive_message', {
             payload: conversation
           });
         }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid"; // Import the uuidv4 function from the uuid package
 import socket from "./socket";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -37,18 +38,16 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    socket.auth = {
-      Authorization: `Bearer ${localStorage.getItem('access_token')}`
-    }
-    socket.connect();
     socket.on("receive_message", (data) => {
       const { payload } = data;
-      setConversations((conversations) => [...conversations, payload]);
+      setConversations((conversations) => {
+        return [...conversations, payload];
+      });
     });
-    
-    socket.on('connect_error', (err) => {
-      console.log(err.data)
-    })
+
+    socket.on("connect_error", (err) => {
+      console.log(err.data);
+    });
     return () => {
       socket.disconnect();
     };
@@ -114,7 +113,7 @@ export default function Chat() {
     setConversations((conversations) => [
       {
         ...conversation,
-        _id: new Date().getTime(),
+        _id: uuidv4(),
       },
       ...conversations,
     ]);
@@ -124,7 +123,7 @@ export default function Chat() {
       <h1>Chat</h1>
       <div>
         {usernames.map((username) => (
-          <div key={username.name}>
+          <div key={username.value}>
             <button onClick={() => getProfile(username.value)}>{username.name}</button>
           </div>
         ))}
@@ -147,7 +146,7 @@ export default function Chat() {
           loader={<h4>Loading...</h4>}
           scrollableTarget="scrollableDiv">
           {conversations.map((conversation) => (
-            <div key={conversations._id}>
+            <div key={conversation._id}>
               <div className="message-container">
                 <div
                   className={

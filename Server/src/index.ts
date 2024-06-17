@@ -80,9 +80,6 @@ export class App {
       this.httpServer.listen(this.port, () => {
         console.log(`app running on port ${this.port}`);
       });
-      this.io.on('connect', () => {
-        console.log('Socket server is running');
-      });
     } catch (err) {
       console.log('Error starting app ', err);
     }
