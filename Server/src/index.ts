@@ -34,6 +34,11 @@ export class App {
   private httpServer: HTTPServer;
   private io: Server;
   private socketService: SocketService;
+  private users: {
+    [key: string]: {
+      socket_id: string;
+    };
+  } = {};
   constructor() {
     this.app = express();
     this.httpServer = createServer(this.app);
@@ -64,6 +69,8 @@ export class App {
     this.app.use('/api/v1/likes', this.likeRouter);
     this.app.use('/api/v1/conversations', this.conversationRouter);
     this.app.use('*', defaultErrorHandlers);
+    this.socketService.setupMiddleware();
+    this.socketService.setupHandler(this.users);
   }
   public async start(): Promise<void> {
     try {
@@ -72,6 +79,9 @@ export class App {
       });
       this.httpServer.listen(this.port, () => {
         console.log(`app running on port ${this.port}`);
+      });
+      this.io.on('connect', () => {
+        console.log('Socket server is running');
       });
     } catch (err) {
       console.log('Error starting app ', err);

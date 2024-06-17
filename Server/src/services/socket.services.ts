@@ -3,7 +3,6 @@ import { UserVerifyStatus } from '~/constants/enums';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { USERS_MESSAGE } from '~/constants/messages';
 import { TokenPayload } from '~/models/requests/User.request';
-import User from '~/models/schemas/User.schema';
 import { verifyAccessToken } from '~/utils/commons';
 import { ErrorWithStatus } from '~/utils/Error';
 import databaseService from './db.services';
@@ -12,20 +11,13 @@ import { ObjectId } from 'mongodb';
 
 class SocketService {
   private io: Server;
-  private users: {
-    [key: string]: {
-      socket_id: string;
-    };
-  } = {};
   constructor(io: Server) {
     this.io = io;
-    this.setupMiddleware();
-    this.setupHandler();
   }
-  private setupMiddleware(): void {
+  public setupMiddleware(): void {
     this.io.use(async (socket, next) => {
       const { Authorization } = socket.handshake.auth;
-      const access_token = Authorization.split(' ')[1];
+      const access_token = Authorization?.split(' ')[1];
       try {
         const decode_authorization = await verifyAccessToken(access_token);
         const { verify } = decode_authorization as TokenPayload;
@@ -36,6 +28,7 @@ class SocketService {
           });
         }
         socket.handshake.auth.decode_authorization = decode_authorization;
+        next();
       } catch (err) {
         next({
           message: 'Unauthorized',
@@ -45,21 +38,23 @@ class SocketService {
       }
     });
   }
-  private setupHandler(): void {
-    console.log('Socket service is running');
+  public setupHandler(users: {
+    [key: string]: {
+      socket_id: string;
+    };
+  }): void {
     this.io.on('connection', (socket: Socket) => {
       console.log(`User connected with id ${socket.id}`);
       // nhan biet client co tat connect khong
       const { user_id } = socket.handshake.auth.decode_authorization as TokenPayload;
-      this.users[user_id] = {
+      users[user_id] = {
         socket_id: socket.id
       };
-      console.log(this.users);
+      console.log(users);
 
       socket.on('send_message', async (data) => {
         const { receiver_id, sender_id, content } = data.payload;
-        const receiver_socket_id = this.users[receiver_id]?.socket_id;
-        if (!receiver_socket_id) return;
+        const receiver_socket_id = users[receiver_id]?.socket_id;
         const conversation = new Conversation({
           sender_id: new ObjectId(sender_id),
           receiver_id: new ObjectId(receiver_id),
@@ -67,15 +62,17 @@ class SocketService {
         });
         const result = await databaseService.conversation.insertOne(conversation);
         conversation._id = result.insertedId;
-        socket.to(receiver_socket_id).emit('receive_message', {
-          payload: conversation
-        });
+        if (receiver_socket_id) {
+          socket.to(receiver_socket_id).emit('receive_message', {
+            payload: conversation
+          });
+        }
       });
 
       socket.on('disconnect', () => {
-        delete this.users[user_id];
+        delete users[user_id];
         console.log(`User disconnected with id ${socket.id}`);
-        console.log(this.users);
+        console.log(users);
       });
     });
   }

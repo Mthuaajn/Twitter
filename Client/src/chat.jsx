@@ -38,24 +38,24 @@ export default function Chat() {
 
   useEffect(() => {
     socket.auth = {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    };
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`
+    }
     socket.connect();
-    socket.on("disconnect", () => {
-      console.log(socket.id);
-    });
     socket.on("receive_message", (data) => {
       const { payload } = data;
       setConversations((conversations) => [...conversations, payload]);
     });
-
+    
+    socket.on('connect_error', (err) => {
+      console.log(err.data)
+    })
     return () => {
       socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    if (receiver) {
+    if (receiver.length !== 0) {
       axios
         .get(`/conversations/${receiver}`, {
           baseURL: import.meta.env.VITE_API_URL,
