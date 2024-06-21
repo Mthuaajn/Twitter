@@ -1,0 +1,84 @@
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: nhism1302+3@gmail.com
+        password:
+          type: string
+          example: Thuan123!
+    SuccessAuthentication:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY2NTc4NWYxZWExOWRiMTI5NzBlMmFiIiwidG9rZW5UeXBlIjowLCJ2ZXJpZnkiOjAsImlhdCI6MTcxODgwNzcxNCwiZXhwIjoxNzE4ODEwNDE0fQ.u30ZOFbbhALvXzvsh9lt6HbAHjPxC-aRNSglV1tVaN8
+            refreshToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY2NTc4NWYxZWExOWRiMTI5NzBlMmFiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjowLCJpYXQiOjE3MTg4MDc3MTQsImV4cCI6MTcyNzQ0NzcxNH0.-ukINHDVDgn6GuDaAZSaRPnmW7vaEtiGaDoJ5EFRN5E
+    VerifyUser:
+      type: array
+      enum: [Unverified, Verified, Banned]
+      example: 1
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        name:
+          type: string
+          example: Thuan123
+        email:
+          type: string
+          example: nhism1302+3@gmail.com
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2000-01-01T00:00:00.000Z
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        verify:
+          $ref: "#/components/schemas/VerifyUser"
+        tweet_circle:
+          type: array
+          items:
+            type: string
+            format: MongoId
+            example: [6666618dd170d973c50a7bb7]
+        bio:
+          type: string
+          example: "Hello, I'm Thuan123"
+        location:
+          type: string
+          example: "Hanoi, Vietnam"
+        website:
+          type: string
+          example: "https://thuan123.com"
+        username:
+          type: string
+          example: user6666618dd170d973c50a7bb7
+        avatar:
+          type: string
+          example: "https://thuan123.com/avatar.jpg"
+        cover_photo:
+          type: string
+          example: "https://thuan123.com/cover.jpg"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
