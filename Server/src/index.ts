@@ -25,6 +25,7 @@ import YAML from 'yaml';
 import path from 'path';
 import swaggerJsdoc from 'swagger-jsdoc';
 import YAMLJS from 'yamljs';
+import { rateLimit } from 'express-rate-limit';
 config();
 export class App {
   private port: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
@@ -42,6 +43,13 @@ export class App {
   private socketService: SocketService;
   // private swaggerDocument: any;
   private openapiSpecification: object;
+  private rateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false // Disable the `X-RateLimit-*` headers.
+    // store: ... , // Redis, Memcached, etc. See below.
+  });
   private users: {
     [key: string]: {
       socket_id: string;
@@ -83,6 +91,7 @@ export class App {
     //     origin: 'http://localhost:3000'
     //   })
     // );
+    this.app.use(this.rateLimiter);
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.openapiSpecification));
     this.app.use('/medias', express.static(UPLOAD_VIDEO_DIR));
     this.app.use('/api/v1/users', this.userRouter);
