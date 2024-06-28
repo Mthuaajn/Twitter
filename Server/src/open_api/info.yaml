@@ -19,6 +19,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
+paths: {}
 externalDocs:
   description: Find out more about Swagger
   url: http://localhost:4000/api/v1
@@ -27,3 +28,15 @@ servers:
 tags:
   - name: users
     description: Operations about user
+  - name: tweets
+    description: Operations about tweets
+  - name: medias
+    description: Operations about medias
+  - name: conversations
+    description: Operations about conversations
+  - name: likes
+    description: Operations about likes
+  - name: bookmarks
+    description: Operations about bookmarks
+  - name: search
+    description: Operations about search tweet

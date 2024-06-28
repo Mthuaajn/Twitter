@@ -1,5 +1,11 @@
 import { ParamsDictionary, Query } from 'express-serve-static-core';
-import { MediaType, MediaTypeQuery, PeopleFollow, TweetAudience, TweetType } from '~/constants/enums';
+import {
+  MediaType,
+  MediaTypeQuery,
+  PeopleFollow,
+  TweetAudience,
+  TweetType
+} from '~/constants/enums';
 import { Media } from '../Order';
 
 export interface TweetRequestBody {

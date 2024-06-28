@@ -57,17 +57,17 @@ export class App {
     });
     // const file = fs.readFileSync(path.resolve('./tweet-clone_swagger.yaml'), 'utf8');
     // this.swaggerDocument = YAML.parse(file);
-    const info = YAMLJS.load(path.resolve('./open_api/info.yaml'));
-    const components = YAMLJS.load(path.resolve('./open_api/components.yaml'));
-    const paths = YAMLJS.load(path.resolve('./open_api/paths.yaml'));
+    const info = YAMLJS.load(path.resolve('./src/open_api/info.yaml'));
+    // const components = YAMLJS.load(path.resolve('./src/open_api/components.yaml'));
+    // const paths = YAMLJS.load(path.resolve('./src/open_api/paths.yaml'));
     const options: swaggerJsdoc.Options = {
       definition: {
         openapi: '3.0.3',
-        ...info,
-        paths: paths.paths,
-        components: components.components
+        ...info
+        // paths: paths.paths,
+        // components: components.components
       },
-      apis: ['./open_api/*.yaml', './routes/*.ts'] // files containing annotations as above
+      apis: ['./src/open_api/*.yaml', './routes/*.ts'] // files containing annotations as above
     };
 
     this.openapiSpecification = swaggerJsdoc(options);

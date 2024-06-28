@@ -1,0 +1,309 @@
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: nhism1302+3@gmail.com
+        password:
+          type: string
+          example: Thuan123!
+    SuccessAuthentication:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY2NTc4NWYxZWExOWRiMTI5NzBlMmFiIiwidG9rZW5UeXBlIjowLCJ2ZXJpZnkiOjAsImlhdCI6MTcxODgwNzcxNCwiZXhwIjoxNzE4ODEwNDE0fQ.u30ZOFbbhALvXzvsh9lt6HbAHjPxC-aRNSglV1tVaN8
+            refreshToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY2NTc4NWYxZWExOWRiMTI5NzBlMmFiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjowLCJpYXQiOjE3MTg4MDc3MTQsImV4cCI6MTcyNzQ0NzcxNH0.-ukINHDVDgn6GuDaAZSaRPnmW7vaEtiGaDoJ5EFRN5E
+    VerifyUser:
+      type: array
+      enum: [Unverified, Verified, Banned]
+      example: 1
+    MediaType:
+      type: array
+      enum: [Image, Video]
+      example: 1
+    TweetType:
+      type: array
+      enum: [Tweet, Retweet, Comment, QuoteTweet]
+      example: 1
+    MediaTypeParameter:
+      type: string
+      enum: [Image, Video]
+      example: Image
+    TweetAudience:
+      type: array
+      enum: [Everyone, TwitterCircle]
+      example: 1
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        name:
+          type: string
+          example: Thuan123
+        email:
+          type: string
+          example: nhism1302+3@gmail.com
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2000-01-01T00:00:00.000Z
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        verify:
+          $ref: "#/components/schemas/VerifyUser"
+        tweet_circle:
+          type: array
+          items:
+            type: string
+            format: MongoId
+            example: [6666618dd170d973c50a7bb7]
+        bio:
+          type: string
+          example: "Hello, I'm Thuan123"
+        location:
+          type: string
+          example: "Hanoi, Vietnam"
+        website:
+          type: string
+          example: "https://thuan123.com"
+        username:
+          type: string
+          example: user6666618dd170d973c50a7bb7
+        avatar:
+          type: string
+          example: "https://thuan123.com/avatar.jpg"
+        cover_photo:
+          type: string
+          example: "https://thuan123.com/cover.jpg"
+    LogoutBody:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjY2NTc4NWYxZWExOWRiMTI5NzBlMmFiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjowLCJpYXQiOjE3MTg4MDc3MTQsImV4cCI6MTcyNzQ0NzcxNH0.-ukINHDVDgn6GuDaAZSaRPnmW7vaEtiGaDoJ5EFRN5E
+    RegisterBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: thuan
+        email:
+          type: string
+          example: nmt6465@gmail.com
+        password:
+          type: string
+          example: Thuan123!
+        confirm_password:
+          type: string
+          example: Thuan123!
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2000-01-01T00:00:00.000Z
+    ChangePasswordBody:
+      type: object
+      properties:
+        old_password:
+          type: string
+          example: Thuan123!
+        new_password:
+          type: string
+          example: Thuan1234!
+        confirm_new_password:
+          type: string
+          example: Thuan1234!
+    ResetPasswordBody:
+      type: object
+      properties:
+        forgot_password_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYwZTRmODc1YzM5YmFlNjcxNTRiMTc0IiwidG9rZW5UeXBlIjoyLCJpYXQiOjE3MTIyOTIxMDQsImV4cCI6MTcxMjg5NjkwNH0.rlJuAs57h_sMBMS0tmSbKt848LE5F7zSNjcA9cjhhcY
+        password:
+          type: string
+          example: Thuan1234!
+        confirm_password:
+          type: string
+          example: Thuan1234!
+    TweetBody:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/TweetType"
+        audience:
+          $ref: "#/components/schemas/TweetAudience"
+        content:
+          type: string
+          example: comment10
+        parent_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        hashtags:
+          type: array
+          items:
+            type: string
+            example: ["#hashtag1", "#hashtag2"]
+        mentions:
+          type: array
+          items:
+            type: string
+            format: MongoId
+            example: 6620cab98cc2edaa43defb67
+        medias:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                $ref: "#/components/schemas/MediaType"
+              url:
+                type: string
+                example: "https://thuan123.com/media.jpg"
+    Tweet:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        user_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        type:
+          $ref: "#/components/schemas/TweetType"
+        audience:
+          $ref: "#/components/schemas/TweetAudience"
+        content:
+          type: string
+          example: comment10
+        parent_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        hashtags:
+          type: array
+          items:
+            type: string
+            format: MongoId
+            example: ["6650734774b5afe652cf3eee", "6650734774b5afe652cf3ef0"]
+        mentions:
+          type: array
+          items:
+            type: string
+            format: MongoId
+            example: ["6620cab98cc2edaa43defb67"]
+        medias:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                $ref: "#/components/schemas/MediaType"
+              url:
+                type: string
+                example: "https://thuan123.com/media.jpg"
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        guest_views:
+          type: integer
+          example: 0
+        user_views:
+          type: integer
+          example: 0
+        User:
+          $ref: "#/components/schemas/User"
+        bookmarks:
+          type: integer
+          example: 0
+        likes:
+          type: integer
+          example: 0
+        retweet_count:
+          type: integer
+          example: 0
+        commentTweet_count:
+          type: integer
+          example: 0
+        quoteTweet_count:
+          type: integer
+          example: 0
+    BookmarkAndLike:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        user_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        tweet_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+    Conversation:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 666ff039e0804c27f19b0723
+        sender_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        receiver_id:
+          type: string
+          format: MongoId
+          example: 6666618dd170d973c50a7bb7
+        content:
+          type: string
+          example: "Hello, I'm Thuan123"
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2021-04-09T00:00:00.000Z
+    PeopleFollowParameter:
+      type: number
+      enum: [Following, Anyone]
+      example: 1
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  requestBodies:

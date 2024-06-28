@@ -127,11 +127,9 @@ class UserService {
     // thuc hien gui email
     await sendVerifyRegisterEmail(payload.email, email_verify_token);
     return {
-      data: {
-        result,
-        accessToken,
-        refreshToken
-      }
+      result,
+      accessToken,
+      refreshToken
     };
   }
   async checkEmailExist(email: string) {
