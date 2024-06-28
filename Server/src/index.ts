@@ -5,7 +5,6 @@ import DatabaseService from '~/services/db.services';
 import userRouter from '~/routes/users.routes';
 import mediaRouter from '~/routes/medias.routes';
 import { initFileUpload } from '~/utils/file';
-import { config } from 'dotenv';
 import staticRouter from './routes/static.routes';
 import tweetRouter from './routes/tweet.routes';
 import bookMarkRouter from './routes/bookmark.routes';
@@ -26,9 +25,10 @@ import path from 'path';
 import swaggerJsdoc from 'swagger-jsdoc';
 import YAMLJS from 'yamljs';
 import { rateLimit } from 'express-rate-limit';
-config();
+import helmet from 'helmet';
+import { envConfig, isProduction } from './constants/config';
 export class App {
-  private port: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+  private port: number = process.env.PORT ? parseInt(envConfig.port as string) : 4000;
   private app: Application;
   private userRouter = userRouter;
   private mediaRouter = mediaRouter;
@@ -55,6 +55,9 @@ export class App {
       socket_id: string;
     };
   } = {};
+  private corsOptions: cors.CorsOptions = {
+    origin: isProduction ? envConfig.clientUrl : '*'
+  };
   constructor() {
     this.app = express();
     this.httpServer = createServer(this.app);
@@ -84,14 +87,11 @@ export class App {
   }
   private setup(): void {
     initFileUpload();
-    // this.app.use(morgan('dev'));
+    this.app.use(morgan('dev'));
     this.app.use(express.json());
-    // this.app.use(
-    //   cors({
-    //     origin: 'http://localhost:3000'
-    //   })
-    // );
+    this.app.use(cors(this.corsOptions));
     this.app.use(this.rateLimiter);
+    this.app.use(helmet());
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.openapiSpecification));
     this.app.use('/medias', express.static(UPLOAD_VIDEO_DIR));
     this.app.use('/api/v1/users', this.userRouter);

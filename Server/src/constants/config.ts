@@ -1,9 +1,11 @@
 import argv from 'minimist';
 import { config } from 'dotenv';
 const options = argv(process.argv.slice(2));
-export const isProduction = Boolean(options.production);
-config();
-
+export const isProduction = options.env === 'production';
+config({
+  path: options.env ? `.env.${options.env}` : '.env'
+});
+console.log('dang bi loi env khong chuyen moi truong duoc');
 export const envConfig = {
   port: (process.env.PORT as string) || 4000,
   host: process.env.HOST as string,
