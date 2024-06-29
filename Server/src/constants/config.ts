@@ -1,11 +1,24 @@
 import argv from 'minimist';
 import { config } from 'dotenv';
-const options = argv(process.argv.slice(2));
-export const isProduction = options.env === 'production';
+// const options = argv(process.argv.slice(2));
+import fs from 'fs';
+import path from 'path';
+const env = process.env.NODE_ENV;
+const extFileEnv = `.env.${env}`;
+export const isProduction = env === 'production';
+console.log(env);
+if (!env) {
+  console.log('NODE_ENV is not set, defaulting to development');
+  process.exit(1);
+}
+if (!fs.existsSync(path.resolve(extFileEnv))) {
+  console.log('Not env file found for the enviroment, defaulting to development');
+  process.exit(1);
+}
 config({
-  path: options.env ? `.env.${options.env}` : '.env'
+  path: extFileEnv
 });
-console.log('dang bi loi env khong chuyen moi truong duoc');
+
 export const envConfig = {
   port: (process.env.PORT as string) || 4000,
   host: process.env.HOST as string,
